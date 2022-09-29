@@ -76,6 +76,7 @@ const App = () => {
           header:({route}) => <HeaderSimple name={route.name}/>,
           headerShown:true
         }}/>
+        {/* Checking fork to start development */}
       </Stack.Navigator>
     </NavigationContainer>
   )
