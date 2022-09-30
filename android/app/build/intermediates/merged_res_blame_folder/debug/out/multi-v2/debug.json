@@ -203,6 +203,23 @@
             "outputFile": "com.projecta.app-merged_res-29:/values_values.arsc.flat",
             "map": [
                 {
+                    "source": "D:\\Farm_management\\farm-management-develop\\android\\app\\src\\main\\res\\values\\strings.xml",
+                    "from": {
+                        "startLines": "1",
+                        "startColumns": "4",
+                        "startOffsets": "17",
+                        "endColumns": "45",
+                        "endOffsets": "58"
+                    },
+                    "to": {
+                        "startLines": "698",
+                        "startColumns": "4",
+                        "startOffsets": "44503",
+                        "endColumns": "45",
+                        "endOffsets": "44544"
+                    }
+                },
+                {
                     "source": "C:\\Users\\Admin\\.gradle\\caches\\transforms-3\\3e0d478508575b75c79938eb5fb0fb04\\transformed\\jetified-startup-runtime-1.0.0\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2",
@@ -217,25 +234,6 @@
                         "startOffsets": "44420",
                         "endColumns": "82",
                         "endOffsets": "44498"
-                    }
-                },
-                {
-                    "source": "D:\\ProjectA\\ProjectA\\android\\app\\src\\main\\res\\values\\styles.xml",
-                    "from": {
-                        "startLines": "3",
-                        "startColumns": "4",
-                        "startOffsets": "54",
-                        "endLines": "6",
-                        "endColumns": "12",
-                        "endOffsets": "267"
-                    },
-                    "to": {
-                        "startLines": "828",
-                        "startColumns": "4",
-                        "startOffsets": "60026",
-                        "endLines": "831",
-                        "endColumns": "12",
-                        "endOffsets": "60204"
                     }
                 },
                 {
@@ -368,23 +366,6 @@
                     }
                 },
                 {
-                    "source": "D:\\ProjectA\\ProjectA\\android\\app\\src\\main\\res\\values\\strings.xml",
-                    "from": {
-                        "startLines": "1",
-                        "startColumns": "4",
-                        "startOffsets": "16",
-                        "endColumns": "45",
-                        "endOffsets": "57"
-                    },
-                    "to": {
-                        "startLines": "698",
-                        "startColumns": "4",
-                        "startOffsets": "44503",
-                        "endColumns": "45",
-                        "endOffsets": "44544"
-                    }
-                },
-                {
                     "source": "C:\\Users\\Admin\\.gradle\\caches\\transforms-3\\cf79e2e10938f670193b7a1a75260249\\transformed\\recyclerview-1.1.0\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
@@ -404,7 +385,7 @@
                     }
                 },
                 {
-                    "source": "D:\\ProjectA\\ProjectA\\android\\app\\build\\generated\\res\\resValues\\debug\\values\\gradleResValues.xml",
+                    "source": "D:\\Farm_management\\farm-management-develop\\android\\app\\build\\generated\\res\\resValues\\debug\\values\\gradleResValues.xml",
                     "from": {
                         "startLines": "6,8",
                         "startColumns": "4,4",
@@ -583,6 +564,25 @@
                         "endLines": "114,115,536,537,538,571,572,573,574,575,576,588,595,596,597,598,599,600,603,636,637,696,701,702,703,704,705,706,707,708,709,710,711,712,713,714,715,716,717,718,719,720,721,722,723,724,725,726,727,728,729,730,736,741,744,745,746,747,748,749,789,790,791,792,794,795,796,797,798,799,800,801,803,804,805,806,815,819,2676,2679,2691,2695,3028,3031,3267,3314,3323,3330,3359,3362,3365,3465,3471,4440",
                         "endColumns": "62,62,50,53,58,47,48,48,47,48,48,40,42,50,42,50,41,49,42,53,47,72,122,95,88,107,116,119,119,101,102,110,106,102,110,168,167,116,109,114,112,155,107,112,90,110,168,97,126,124,94,106,79,75,72,86,70,70,77,79,85,83,71,81,83,76,86,84,78,74,72,88,76,77,72,77,10,10,12,12,10,10,12,12,25,34,10,10,10,10,10,12,12,10",
                         "endOffsets": "7039,7102,35109,35163,35222,37180,37229,37278,37326,37375,37424,38040,38372,38423,38466,38517,38559,38609,38748,40451,40499,44415,44948,45044,45133,45241,45358,45478,45598,45700,45803,45914,46021,46124,46235,46404,46572,46689,46799,46914,47027,47183,47291,47404,47495,47606,47775,47873,48000,48125,48220,48327,48834,49378,49758,49845,49916,49987,50065,50145,57204,57288,57360,57442,57579,57656,57743,57828,57907,57982,58055,58144,58292,58370,58443,58521,59211,59459,178170,178355,178875,179081,201268,201457,218135,221189,221727,222145,223665,223842,224021,232266,232631,294097"
+                    }
+                },
+                {
+                    "source": "D:\\Farm_management\\farm-management-develop\\android\\app\\src\\main\\res\\values\\styles.xml",
+                    "from": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "57",
+                        "endLines": "6",
+                        "endColumns": "12",
+                        "endOffsets": "273"
+                    },
+                    "to": {
+                        "startLines": "828",
+                        "startColumns": "4",
+                        "startOffsets": "60026",
+                        "endLines": "831",
+                        "endColumns": "12",
+                        "endOffsets": "60204"
                     }
                 }
             ]
