@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import {View,Text,TouchableOpacity,SafeAreaView,FlatList,TextInput,Button,ToastAndroid} from 'react-native'
+import {View,Text,TouchableOpacity,SafeAreaView,FlatList,TextInput,Button,ToastAndroid,ScrollView} from 'react-native'
 import tw from 'twrnc'
 import {useNavigation} from '@react-navigation/native'
 import { addTractor, clearCurrentTractor, deleteTractor, updateTractor, useTractor } from '../../components/contexts/Tractors/tractorState'
@@ -71,60 +71,62 @@ const AddEditTractor = ({route}) => {
    }
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
-        <View style={tw `h-full w-full flex flex-col items-center p-2`}>
-            <View style={tw `form h-max w-11/12 p-2 flex space-y-2`}>
-                <TextInput 
-                    keyboardType='default'
-                    placeholder='Name*'
-                    placeholderTextColor={'#9ca3af'}
-                    style={tw `pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
-                    value={Name}
-                    onChangeText={setName}
-                />
-                <TextInput 
-                    keyboardType='numeric'
-                    placeholder='Size'
-                    placeholderTextColor={'#9ca3af'}
-                    style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
-                    value={Size}
-                    onChangeText={setSize}
-                />
-                <TextInput 
-                    keyboardType='default'
-                    placeholder='Model'
-                    placeholderTextColor={'#9ca3af'}
-                    style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
-                    value={model}
-                    onChangeText={setModel}
-                />
-                <TextInput 
-                    keyboardType='default'
-                    placeholder='Color'
-                    placeholderTextColor={'#9ca3af'}
-                    style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
-                    value={color}
-                    onChangeText={setColor}
-                />
-                <TextInput 
-                    keyboardType='default'
-                    placeholder='Company*'
-                    placeholderTextColor={'#9ca3af'}
-                    style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
-                    value={company}
-                    onChangeText={setCompany}
-                />
-                <TextInput 
-                    keyboardType='default'
-                    placeholder='Register Number*'
-                    placeholderTextColor={'#9ca3af'}
-                    style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
-                    value={registrationNumber}
-                    onChangeText={setRegistrationNumber}
-                />
-                <MyButton cb={OnSubmit} value={type=="edit"? "Update" : "Add"}/>
-                {type=="edit" && <MyButton cb={OnDelete} value="Delete"/>}
+        <ScrollView style={tw `min-h-screen w-full`}>
+            <View style={tw `h-full w-full flex flex-col items-center p-2`}>
+                <View style={tw `form h-max w-11/12 p-2 flex space-y-2`}>
+                    <TextInput 
+                        keyboardType='default'
+                        placeholder='Name*'
+                        placeholderTextColor={'#9ca3af'}
+                        style={tw `pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        value={Name}
+                        onChangeText={setName}
+                    />
+                    <TextInput 
+                        keyboardType='numeric'
+                        placeholder='Size'
+                        placeholderTextColor={'#9ca3af'}
+                        style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        value={Size}
+                        onChangeText={setSize}
+                    />
+                    <TextInput 
+                        keyboardType='default'
+                        placeholder='Model'
+                        placeholderTextColor={'#9ca3af'}
+                        style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        value={model}
+                        onChangeText={setModel}
+                    />
+                    <TextInput 
+                        keyboardType='default'
+                        placeholder='Color'
+                        placeholderTextColor={'#9ca3af'}
+                        style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        value={color}
+                        onChangeText={setColor}
+                    />
+                    <TextInput 
+                        keyboardType='default'
+                        placeholder='Company*'
+                        placeholderTextColor={'#9ca3af'}
+                        style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        value={company}
+                        onChangeText={setCompany}
+                    />
+                    <TextInput 
+                        keyboardType='default'
+                        placeholder='Register Number*'
+                        placeholderTextColor={'#9ca3af'}
+                        style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        value={registrationNumber}
+                        onChangeText={setRegistrationNumber}
+                    />
+                    <MyButton cb={OnSubmit} value={type=="edit"? "Update" : "Add"}/>
+                    {type=="edit" && <MyButton cb={OnDelete} value="Delete"/>}
+                </View>
             </View>
-        </View>
+        </ScrollView>
     </SafeAreaView>
   )
 }
