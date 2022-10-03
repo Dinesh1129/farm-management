@@ -14,7 +14,6 @@ const AddEditTractor = () => {
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
         <View style={tw `h-full w-full flex flex-col items-center p-2`}>
-            <Text style={tw `font-bold text-lg`}>ADD / EDIT Tractors</Text>
             <View style={tw `form h-max w-11/12 p-2 flex space-y-2`}>
                 <TextInput 
                     keyboardType='default'

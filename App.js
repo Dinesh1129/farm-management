@@ -55,27 +55,39 @@ const App = () => {
           <Stack.Screen name='register' component={Registration}/>
           <Stack.Screen name='menu' component={Menu}/>
           <Stack.Screen name='tractors' component={Tractors} options={{
-            header:({route}) => <Header name={route.name} location={'tractors-add-edit'}/>,
+            header:({route}) => <Header name={route.name} location={'tractors-add'}/>,
             headerShown:true
           }}/>
-          <Stack.Screen name='tractors-add-edit' component={AddEditTractor} options={{
-            header:({route}) => <HeaderSimple name={route.name}/>,
+          <Stack.Screen name='tractors-add' component={AddEditTractor} options={{
+            header:({route}) => <HeaderSimple name={"Add your tractor"}/>,
+            headerShown:true
+          }}/>
+          <Stack.Screen name='tractors-edit' component={AddEditTractor} options={{
+            header:({route}) => <HeaderSimple name={"Edit your tractor"}/>,
             headerShown:true
           }}/>
           <Stack.Screen name='drivers' component={Drivers} options={{
-            header:({route}) => <Header name={route.name} location={'drivers-add-edit'}/>,
+            header:({route}) => <Header name={route.name} location={'drivers-add'}/>,
             headerShown:true
           }}/>
-          <Stack.Screen name='drivers-add-edit' component={AddEditDriver} options={{
-            header:({route}) => <HeaderSimple name={route.name}/>,
+          <Stack.Screen name='drivers-add' component={AddEditDriver} options={{
+            header:({route}) => <HeaderSimple name={"Add your driver"}/>,
+            headerShown:true
+          }}/>
+           <Stack.Screen name='drivers-edit' component={AddEditDriver} options={{
+            header:({route}) => <HeaderSimple name={"Edit your driver"}/>,
             headerShown:true
           }}/>
           <Stack.Screen name='plows' component={Plows} options={{
-            header:({route}) => <Header name={route.name} location={'plows-add-edit'}/>,
+            header:({route}) => <Header name={route.name} location={'plows-add'}/>,
             headerShown:true
           }}/>
-          <Stack.Screen name='plows-add-edit' component={AddEditPlow} options={{
-            header:({route}) => <HeaderSimple name={route.name}/>,
+          <Stack.Screen name='plows-add' component={AddEditPlow} options={{
+            header:({route}) => <HeaderSimple name={"Add your plow"}/>,
+            headerShown:true
+          }}/>
+          <Stack.Screen name='plows-edit' component={AddEditPlow} options={{
+            header:({route}) => <HeaderSimple name={"Edit your plow"}/>,
             headerShown:true
           }}/>
           {/* Checking fork to start development */}
