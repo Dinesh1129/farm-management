@@ -16,7 +16,7 @@ const Plows = () => {
             keyExtractor={e =>e}
             renderItem={RenderView}
         /> */}
-        {plows.map(val => <RenderView key={val} item={val} location={'plows-add-edit'}/>)}
+        {plows.map(val => <RenderView key={val} item={val} location={'plows-edit'}/>)}
     </View>
     </SafeAreaView>
   )

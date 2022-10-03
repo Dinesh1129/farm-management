@@ -33,7 +33,7 @@ const Tractors = () => {
             keyExtractor={e =>e}
             renderItem={RenderView}
         /> */}
-        {tractors.map(val => <RenderView key={val} item={val} location={'tractors-add-edit'}/>)}
+        {tractors.map(val => <RenderView key={val} item={val} location={'tractors-edit'}/>)}
     </View>
     </SafeAreaView>
   )

@@ -32,7 +32,7 @@ const AddEditDriver = ({route}) => {
            }
    },[])
    const OnSubmit = () => {
-    if(Name.trim() === "" || phone.trim()==="" || license.trim()===""){
+    if(Name.trim() === "" || phone.trim()=== "" || license.trim()=== ""){
         ToastAndroid.show("Please fill required fields",ToastAndroid.SHORT)
         return
     }
@@ -62,7 +62,6 @@ const AddEditDriver = ({route}) => {
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
         <ScrollView style={tw `min-h-screen w-full`}>
             <View style={tw `h-full w-full flex flex-col items-center p-2`}>
-                <Text style={tw `font-bold text-lg`}>ADD / EDIT Tractors</Text>
                 <View style={tw `form h-max w-11/12 p-2 flex space-y-2`}>
                     <TextInput 
                         keyboardType='default'
@@ -97,7 +96,7 @@ const AddEditDriver = ({route}) => {
                         onChangeText={setlicense}
                     />
                     {/* <MyButton cb={() => type? UpdateItem(item.name,item): AddItem(item.name)}/> */}
-                    <MyButton cb={OnSubmit} value={type=="edit"? "Edit" : "Add"}/>
+                    <MyButton cb={OnSubmit} value={type=="edit"? "Update" : "Add"}/>
                     {type=="edit" && <MyButton cb={OnDelete} value="Delete"/>}
                 </View>
             </View>

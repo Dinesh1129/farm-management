@@ -27,7 +27,7 @@ const Drivers = () => {
             renderItem={RenderView}
         /> */}
         {/* {drivers.map(val => <RenderView key={val.name} item={val} location={'drivers-add-edit'}/>)} */}
-        {state.drivers?.map(val => <RenderView key={val} item={val} location={'drivers-add-edit'}/>)}
+        {state.drivers?.map(val => <RenderView key={val} item={val} location={'drivers-edit'}/>)}
     </View>
     </SafeAreaView>
   )
