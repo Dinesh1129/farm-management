@@ -4,15 +4,24 @@ import tw from 'twrnc'
 import MI from 'react-native-vector-icons/dist/MaterialIcons'
 import {useNavigation} from '@react-navigation/native'
 import { getDriver, setCurrentDriver, useDriver } from '../../components/contexts/driver/driverState'
+import { getTractor, useTractor } from '../../components/contexts/Tractors/tractorState'
 
 
-const tractors = ['TractorA','TractorB','TractorC']
+// const tractors = ['TractorA','TractorB','TractorC']
+
+
 
 export const RenderView = ({item,location}) => {
     const navigation = useNavigation()
-    const [driverstate,dispatch] = useDriver()
+    const [driverstate,driverdispatch] = useDriver()
+    const [tractorstate,tractordispatch] = useTractor()
     const MovetoNext = async() => {
-       await getDriver(item.id,dispatch)
+       if(location=="drivers-edit"){
+        await getDriver(item.id,driverdispatch)
+       }else if(location=="tractors-edit"){
+        await getTractor(item.id,tractordispatch)
+       }
+       
         navigation.navigate(location,{type:"edit"})
     }
     
@@ -25,6 +34,7 @@ export const RenderView = ({item,location}) => {
 }
 
 const Tractors = () => {
+    const [state,dispatch] = useTractor()
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
     <View style={tw `h-full w-full p-2`}>
@@ -33,7 +43,7 @@ const Tractors = () => {
             keyExtractor={e =>e}
             renderItem={RenderView}
         /> */}
-        {tractors.map(val => <RenderView key={val} item={val} location={'tractors-edit'}/>)}
+        {state.tractors?.map(val => <RenderView key={val} item={val} location={'tractors-edit'}/>)}
     </View>
     </SafeAreaView>
   )

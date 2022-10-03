@@ -14,6 +14,7 @@ import AddEditPlow from './screens/Plows/AddEditPlow'
 import Login from './screens/login/Login'
 import Registration from './screens/login/Registration'
 import DriverState from './components/contexts/driver/driverState'
+import TractorState from './components/contexts/Tractors/tractorState'
 
 const Stack = createNativeStackNavigator()
 
@@ -47,6 +48,7 @@ const HeaderSimple = ({name}) =>{
 const App = () => {
   return (
     <DriverState>
+      <TractorState>
       <NavigationContainer>
         <Stack.Navigator initialRouteName='login' screenOptions={{
           headerShown:false
@@ -93,6 +95,7 @@ const App = () => {
           {/* Checking fork to start development */}
         </Stack.Navigator>
       </NavigationContainer>
+      </TractorState>
     </DriverState>
   )
 }
