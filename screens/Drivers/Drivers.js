@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import {View,Text,TouchableOpacity,SafeAreaView,FlatList} from 'react-native'
+import {View,Text,TouchableOpacity,SafeAreaView,FlatList,ScrollView} from 'react-native'
 import tw from 'twrnc'
 import MI from 'react-native-vector-icons/dist/MaterialIcons'
 import {useNavigation} from '@react-navigation/native'
@@ -20,15 +20,17 @@ const Drivers = () => {
   
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
-    <View style={tw `h-full w-full p-2`}>
-        {/* <FlatList 
-            data={tractors}
-            keyExtractor={e =>e}
-            renderItem={RenderView}
-        /> */}
-        {/* {drivers.map(val => <RenderView key={val.name} item={val} location={'drivers-add-edit'}/>)} */}
-        {state.drivers?.map(val => <RenderView key={val} item={val} location={'drivers-edit'}/>)}
-    </View>
+      <ScrollView style={tw `min-h-screen w-full`}>
+        <View style={tw `h-full w-full p-2`}>
+            {/* <FlatList 
+                data={tractors}
+                keyExtractor={e =>e}
+                renderItem={RenderView}
+            /> */}
+            {/* {drivers.map(val => <RenderView key={val.name} item={val} location={'drivers-add-edit'}/>)} */}
+            {state.drivers?.map(val => <RenderView key={val} item={val} location={'drivers-edit'}/>)}
+        </View>
+    </ScrollView>
     </SafeAreaView>
   )
 }
