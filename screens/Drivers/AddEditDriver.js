@@ -1,10 +1,11 @@
 import React,{useState,useEffect} from 'react'
-import {View,Text,TouchableOpacity,SafeAreaView,FlatList,TextInput,Button,ScrollView,ToastAndroid} from 'react-native'
+import {View,Text,TouchableOpacity,SafeAreaView,FlatList,Button,ScrollView,ToastAndroid} from 'react-native'
 import tw from 'twrnc'
 import { addDriver, clearCurrentDriver, deleteDriver, updateDriver, useDriver } from '../../components/contexts/driver/driverState'
 import { MyButton } from '../Tractors/AddEditTractor'
 import {useNavigation} from '@react-navigation/native'
 import uuid from 'react-native-uuid'
+import {TextInput} from 'react-native-paper'
 
 
 const AddEditDriver = ({route}) => {
@@ -66,33 +67,38 @@ const AddEditDriver = ({route}) => {
                     <TextInput 
                         keyboardType='default'
                         placeholder='Name*'
-                        placeholderTextColor={'#9ca3af'}
-                        style={tw `pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        label={'Name*'}
+                        // outlineColor="blue"
+                        mode={'outlined'}
                         value={Name}
+                        style={tw `mt-2`}
                         onChangeText={setName}
                     />
                     <TextInput 
                         keyboardType='email-address'
                         placeholder='Email'
-                        placeholderTextColor={'#9ca3af'}
-                        style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        label={'Email'}
+                        mode={'outlined'}
                         value={email}
+                        style={tw `mt-2`}
                         onChangeText={setEmail}
                     />
                     <TextInput 
                         keyboardType='number-pad'
                         placeholder='Phone Number*'
-                        placeholderTextColor={'#9ca3af'}
-                        style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        label={'Phone Number*'}
+                        mode={'outlined'}
                         value={phone}
+                        style={tw `mt-2`}
                         onChangeText={setphone}
                     />
                     <TextInput 
                         keyboardType='default'
                         placeholder='License Number*'
-                        placeholderTextColor={'#9ca3af'}
-                        style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        label={'License Number*'}
+                        mode={'outlined'}
                         value={license}
+                        style={tw `mt-2`}
                         onChangeText={setlicense}
                     />
                     {/* <MyButton cb={() => type? UpdateItem(item.name,item): AddItem(item.name)}/> */}

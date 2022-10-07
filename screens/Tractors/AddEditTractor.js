@@ -1,9 +1,10 @@
 import React,{useState,useEffect} from 'react'
-import {View,Text,TouchableOpacity,SafeAreaView,FlatList,TextInput,Button,ToastAndroid,ScrollView} from 'react-native'
+import {View,Text,TouchableOpacity,SafeAreaView,FlatList,Button,ToastAndroid,ScrollView} from 'react-native'
 import tw from 'twrnc'
 import {useNavigation} from '@react-navigation/native'
 import { addTractor, clearCurrentTractor, deleteTractor, updateTractor, useTractor } from '../../components/contexts/Tractors/tractorState'
 import uuid from 'react-native-uuid'
+import {TextInput} from 'react-native-paper'
 
 export const MyButton = ({value="Add/Edit",cb={}}) => {
     return (
@@ -77,48 +78,60 @@ const AddEditTractor = ({route}) => {
                     <TextInput 
                         keyboardType='default'
                         placeholder='Name*'
+                        mode='outlined'
+                        label={'Name*'}
                         placeholderTextColor={'#9ca3af'}
-                        style={tw `pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        style={tw `mt-2`}
                         value={Name}
                         onChangeText={setName}
                     />
                     <TextInput 
                         keyboardType='numeric'
+                        mode='outlined'
                         placeholder='Size'
+                        label={'Size'}
                         placeholderTextColor={'#9ca3af'}
-                        style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        style={tw `mt-2`}
                         value={Size}
                         onChangeText={setSize}
                     />
                     <TextInput 
                         keyboardType='default'
+                        mode='outlined'
                         placeholder='Model'
+                        label={'Model'}
                         placeholderTextColor={'#9ca3af'}
-                        style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        style={tw `mt-2`}
                         value={model}
                         onChangeText={setModel}
                     />
                     <TextInput 
                         keyboardType='default'
+                        mode='outlined'
                         placeholder='Color'
+                        label={'Color'}
                         placeholderTextColor={'#9ca3af'}
-                        style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        style={tw `mt-2`}
                         value={color}
                         onChangeText={setColor}
                     />
                     <TextInput 
                         keyboardType='default'
+                        mode='outlined'
                         placeholder='Company*'
+                        label={'Company*'}
                         placeholderTextColor={'#9ca3af'}
-                        style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        style={tw `mt-2`}
                         value={company}
                         onChangeText={setCompany}
                     />
                     <TextInput 
                         keyboardType='default'
+                        mode='outlined'
                         placeholder='Register Number*'
+                        label={'Register Number*'}
                         placeholderTextColor={'#9ca3af'}
-                        style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
+                        style={tw `mt-2`}
                         value={registrationNumber}
                         onChangeText={setRegistrationNumber}
                     />

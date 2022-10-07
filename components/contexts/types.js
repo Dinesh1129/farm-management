@@ -17,3 +17,13 @@ export const ERROR_TRACTOR='error_tractor'
 export const CURRENT_TRACTOR="current_tractor"
 export const CLEAR_CURRENT_TRACTOR="clear_current_tractor"
 export const TRACTOR_KEY = "tractors"
+
+export const ADD_PLOW = "add_plow"
+export const GET_PLOW = "get_plow"
+export const ALL_PLOW = "all_plow"
+export const UPDATE_PLOW = "update_plow"
+export const DELETE_PLOW = "delete_plow"
+export const ERROR_PLOW = "error_plow"
+export const CURRENT_PLOW = "current_plow"
+export const CLEAR_CURRENT_PLOW = "clear_current_plow"
+export const PLOW_KEY="plows"

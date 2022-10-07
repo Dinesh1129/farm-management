@@ -15,6 +15,7 @@ import Login from './screens/login/Login'
 import Registration from './screens/login/Registration'
 import DriverState from './components/contexts/driver/driverState'
 import TractorState from './components/contexts/Tractors/tractorState'
+import PlowState from './components/contexts/plows/plowState'
 
 const Stack = createNativeStackNavigator()
 
@@ -49,52 +50,54 @@ const App = () => {
   return (
     <DriverState>
       <TractorState>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName='login' screenOptions={{
-          headerShown:false
-        }}>
-          <Stack.Screen name='login' component={Login}/>
-          <Stack.Screen name='register' component={Registration}/>
-          <Stack.Screen name='menu' component={Menu}/>
-          <Stack.Screen name='tractors' component={Tractors} options={{
-            header:({route}) => <Header name={route.name} location={'tractors-add'}/>,
-            headerShown:true
-          }}/>
-          <Stack.Screen name='tractors-add' component={AddEditTractor} options={{
-            header:({route}) => <HeaderSimple name={"Add your tractor"}/>,
-            headerShown:true
-          }}/>
-          <Stack.Screen name='tractors-edit' component={AddEditTractor} options={{
-            header:({route}) => <HeaderSimple name={"Edit your tractor"}/>,
-            headerShown:true
-          }}/>
-          <Stack.Screen name='drivers' component={Drivers} options={{
-            header:({route}) => <Header name={route.name} location={'drivers-add'}/>,
-            headerShown:true
-          }}/>
-          <Stack.Screen name='drivers-add' component={AddEditDriver} options={{
-            header:({route}) => <HeaderSimple name={"Add your driver"}/>,
-            headerShown:true
-          }}/>
-           <Stack.Screen name='drivers-edit' component={AddEditDriver} options={{
-            header:({route}) => <HeaderSimple name={"Edit your driver"}/>,
-            headerShown:true
-          }}/>
-          <Stack.Screen name='plows' component={Plows} options={{
-            header:({route}) => <Header name={route.name} location={'plows-add'}/>,
-            headerShown:true
-          }}/>
-          <Stack.Screen name='plows-add' component={AddEditPlow} options={{
-            header:({route}) => <HeaderSimple name={"Add your plow"}/>,
-            headerShown:true
-          }}/>
-          <Stack.Screen name='plows-edit' component={AddEditPlow} options={{
-            header:({route}) => <HeaderSimple name={"Edit your plow"}/>,
-            headerShown:true
-          }}/>
-          {/* Checking fork to start development */}
-        </Stack.Navigator>
-      </NavigationContainer>
+        <PlowState>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName='login' screenOptions={{
+              headerShown:false
+            }}>
+              <Stack.Screen name='login' component={Login}/>
+              <Stack.Screen name='register' component={Registration}/>
+              <Stack.Screen name='menu' component={Menu}/>
+              <Stack.Screen name='tractors' component={Tractors} options={{
+                header:({route}) => <Header name={route.name} location={'tractors-add'}/>,
+                headerShown:true
+              }}/>
+              <Stack.Screen name='tractors-add' component={AddEditTractor} options={{
+                header:({route}) => <HeaderSimple name={"Add your tractor"}/>,
+                headerShown:true
+              }}/>
+              <Stack.Screen name='tractors-edit' component={AddEditTractor} options={{
+                header:({route}) => <HeaderSimple name={"Edit your tractor"}/>,
+                headerShown:true
+              }}/>
+              <Stack.Screen name='drivers' component={Drivers} options={{
+                header:({route}) => <Header name={route.name} location={'drivers-add'}/>,
+                headerShown:true
+              }}/>
+              <Stack.Screen name='drivers-add' component={AddEditDriver} options={{
+                header:({route}) => <HeaderSimple name={"Add your driver"}/>,
+                headerShown:true
+              }}/>
+              <Stack.Screen name='drivers-edit' component={AddEditDriver} options={{
+                header:({route}) => <HeaderSimple name={"Edit your driver"}/>,
+                headerShown:true
+              }}/>
+              <Stack.Screen name='plows' component={Plows} options={{
+                header:({route}) => <Header name={route.name} location={'plows-add'}/>,
+                headerShown:true
+              }}/>
+              <Stack.Screen name='plows-add' component={AddEditPlow} options={{
+                header:({route}) => <HeaderSimple name={"Add your plow"}/>,
+                headerShown:true
+              }}/>
+              <Stack.Screen name='plows-edit' component={AddEditPlow} options={{
+                header:({route}) => <HeaderSimple name={"Edit your plow"}/>,
+                headerShown:true
+              }}/>
+              {/* Checking fork to start development */}
+            </Stack.Navigator>
+          </NavigationContainer>
+        </PlowState>
       </TractorState>
     </DriverState>
   )
