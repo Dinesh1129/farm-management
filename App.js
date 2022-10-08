@@ -16,6 +16,9 @@ import Registration from './screens/login/Registration'
 import DriverState from './components/contexts/driver/driverState'
 import TractorState from './components/contexts/Tractors/tractorState'
 import PlowState from './components/contexts/plows/plowState'
+import RecordMenu from './screens/Records/RecordMenu'
+import AddEditRecord from './screens/Records/AddEditRecord'
+import { Provider as PaperProvider } from 'react-native-paper';
 
 const Stack = createNativeStackNavigator()
 
@@ -51,6 +54,7 @@ const App = () => {
     <DriverState>
       <TractorState>
         <PlowState>
+          <PaperProvider>
           <NavigationContainer>
             <Stack.Navigator initialRouteName='login' screenOptions={{
               headerShown:false
@@ -94,9 +98,18 @@ const App = () => {
                 header:({route}) => <HeaderSimple name={"Edit your plow"}/>,
                 headerShown:true
               }}/>
+              <Stack.Screen name='records-menu' component={RecordMenu} options={{
+                header:({route}) => <Header name={route.name} location={'record-add'}/>,
+                headerShown:true
+              }}/>
+              <Stack.Screen name='record-add' component={AddEditRecord} options={{
+                header:({route}) => <HeaderSimple name={"Add your plow"}/>,
+                headerShown:true
+              }}/>
               {/* Checking fork to start development */}
             </Stack.Navigator>
           </NavigationContainer>
+          </PaperProvider>
         </PlowState>
       </TractorState>
     </DriverState>

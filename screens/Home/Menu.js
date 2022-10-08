@@ -11,7 +11,7 @@ const Menu = () => {
         <View style={tw `m-2 p-2 flex flex-col`}>
             <Text style={tw `text-center font-bold text-lg text-black`}>Menu</Text>
             <View style={tw `mt-2 flex flex-row flex-wrap justify-around`}>
-                <TouchableOpacity style={tw `mt-2 h-[150px] w-[150px] bg-[#fcba03] justify-center items-center flex flex-row`}>
+                <TouchableOpacity style={tw `mt-2 h-[150px] w-[150px] bg-[#fcba03] justify-center items-center flex flex-row`} onPress={() => navigation.navigate('records-menu')}>
                     <Text style={tw `text-center text-black`}>Records</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={tw `mt-2 h-[150px] w-[150px] bg-[#fcba03] justify-center items-center flex flex-row`} onPress={() => navigation.navigate('drivers')}>
