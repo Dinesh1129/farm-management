@@ -5,6 +5,7 @@ import MI from 'react-native-vector-icons/dist/MaterialIcons'
 import {useNavigation} from '@react-navigation/native'
 import { getDriver, setCurrentDriver, useDriver } from '../../components/contexts/driver/driverState'
 import { getTractor, useTractor } from '../../components/contexts/Tractors/tractorState'
+import { getPlow, usePlow } from '../../components/contexts/plows/plowState'
 
 
 // const tractors = ['TractorA','TractorB','TractorC']
@@ -15,11 +16,14 @@ export const RenderView = ({item,location}) => {
     const navigation = useNavigation()
     const [driverstate,driverdispatch] = useDriver()
     const [tractorstate,tractordispatch] = useTractor()
+    const [plowstate,plowdispatch] = usePlow()
     const MovetoNext = async() => {
        if(location=="drivers-edit"){
         await getDriver(item.id,driverdispatch)
        }else if(location=="tractors-edit"){
         await getTractor(item.id,tractordispatch)
+       }else if(location=="plows-edit"){
+        await getPlow(item.id,plowdispatch)
        }
        
         navigation.navigate(location,{type:"edit"})
