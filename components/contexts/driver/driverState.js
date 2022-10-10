@@ -68,7 +68,6 @@ export const updateDriver = async (key,driver,dispatch)=>{
     try {
         const json = JSON.stringify(driver)
         await AsyncStorage.setItem(key,json)
-        await AsyncStorage.setItem(DRIVERS_KEY,JSON.stringify())
         dispatch({
             type:UPDATE_DRIVER,
             payload:driver

@@ -1,5 +1,5 @@
 import React,{useReducer,useContext} from 'react'
-import { ADD_TRACTOR, ALL_TRACTOR, CLEAR_CURRENT_TRACTOR, CURRENT_TRACTOR, DELETE_TRACTOR, GET_TRACTOR, TRACTOR_KEY } from '../types'
+import { ADD_TRACTOR, ALL_TRACTOR, CLEAR_CURRENT_TRACTOR, CURRENT_TRACTOR, DELETE_TRACTOR, GET_TRACTOR, TRACTOR_KEY, UPDATE_TRACTOR } from '../types'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import TractorReducer from './tractorReducer'
 import TractorContext from './TractorContext'
@@ -67,10 +67,9 @@ export const updateTractor = async (key,tractor,dispatch)=>{
     try {
         const json = JSON.stringify(tractor)
         await AsyncStorage.setItem(key,json)
-        await AsyncStorage.setItem(TRACTOR_KEY,JSON.stringify())
         dispatch({
-            type:UPDATE_DRIVER,
-            payload:driver
+            type:UPDATE_TRACTOR,
+            payload:tractor
         })
 
     } catch (error) {

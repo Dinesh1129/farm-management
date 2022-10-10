@@ -58,7 +58,6 @@ export const updatePlow = async (key,plow,dispatch) => {
     try {
         const json = JSON.stringify(plow)
         await AsyncStorage.setItem(key,json)
-        await AsyncStorage.setItem(TRACTOR_KEY,JSON.stringify())
         dispatch({
             type:UPDATE_PLOW,
             payload:plow
