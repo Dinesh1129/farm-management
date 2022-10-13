@@ -24,7 +24,8 @@ export default (state,action) => {
             };
         case UPDATE_PLOW:
             async function updatecall(){
-                const data = state.plows.map(plow => plow.id === action.payload.id ? {...plow,name:plow.name} : plow)
+                const data = state.plows.map(plow => plow.id === action.payload.id ? {...plow,name:action.payload.name} : plow)
+                console.log('changing data, ',data)
                 if(data.length>0){
                     await AsyncStorage.setItem(PLOW_KEY,JSON.stringify(data))
                 }else{
@@ -32,7 +33,7 @@ export default (state,action) => {
                 }
                 
             }
-           updatecall()
+          updatecall()
             return {
                 ...state,
                 plows:state.plows.map(plow => plow.id===action.payload.id ? action.payload : plow)
