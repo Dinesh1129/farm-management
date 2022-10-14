@@ -1,10 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {View,Text,TouchableOpacity,SafeAreaView} from 'react-native'
 import tw from 'twrnc'
 import {useNavigation} from '@react-navigation/native'
+import { getDrivers, useDriver } from '../../components/contexts/driver/driverState'
+import { getTractors, useTractor } from '../../components/contexts/Tractors/tractorState'
+import { getPlows, usePlow } from '../../components/contexts/plows/plowState'
 
 const Menu = () => {
     const navigation = useNavigation()
+    const [driverstate,driverDispatch] = useDriver()
+    const [tractorstate,tractorDispatch] = useTractor()
+    const [plowstate,plowDispatch] = usePlow()
+
+    useEffect(() => {
+        getDrivers(driverDispatch)
+        getTractors(tractorDispatch)
+        getPlows(plowDispatch)
+    },[])
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
     <View style={tw `h-full w-full flex flex-col`}>
