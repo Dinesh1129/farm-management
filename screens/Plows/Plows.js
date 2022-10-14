@@ -4,12 +4,15 @@ import tw from 'twrnc'
 import MI from 'react-native-vector-icons/dist/MaterialIcons'
 import {useNavigation} from '@react-navigation/native'
 import { RenderView } from '../Tractors/Tractors'
-import { usePlow } from '../../components/contexts/plows/plowState'
+import { getPlows, usePlow } from '../../components/contexts/plows/plowState'
 
 const plows = ['PlowA','PlowB','PlowC']
 
 const Plows = () => {
   const [state,dispatch] = usePlow()
+  useEffect(() => {
+    getPlows(dispatch)
+  },[]) 
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
     <View style={tw `h-full w-full p-2`}>

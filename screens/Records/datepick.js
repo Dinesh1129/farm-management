@@ -13,7 +13,7 @@ const DatePick = ({modalVisible,setModalVisible,date,setDate}) => {
             <DatePicker 
             modal
             mode="date"
-            date={date}
+            date={new Date()}
             open={modalVisible}
             onConfirm={(dat) => {
                 setDate(dat)

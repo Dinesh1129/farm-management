@@ -3,16 +3,17 @@ import { Alert, Modal, StyleSheet, Text, Pressable, View,TouchableOpacity,SafeAr
 import DatePicker from "react-native-date-picker";
 import tw from 'twrnc'
 
-const StartTime = ({setStartModalVisible,startmodalVisible,setStarttime,starttime}) => {
+const StartTime = ({setStartModalVisible,startmodalVisible,setStarttime,starttime,setSMins}) => {
   
     return (
         <DatePicker 
         modal
         mode="time"
-        date={starttime}
+        date={new Date()}
         open={startmodalVisible}
         onConfirm={(tim) => {
             setStarttime(tim)
+            setSMins(tim)
             console.log(tim.toLocaleString())
             setStartModalVisible(false)
         }}

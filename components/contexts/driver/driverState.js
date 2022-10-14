@@ -85,7 +85,7 @@ export const deleteDriver = async (key,dispatch) => {
             payload:key
         })
     } catch (error) {
-        
+        console.log(error,'error in delete driver----------')
     }
 }
 
@@ -110,7 +110,7 @@ const DriverState = ({children}) => {
     const initialState = {
         drivers: [],
         current:null,
-        filterred:null,
+        filtered:null,
         error:null
     }
 
