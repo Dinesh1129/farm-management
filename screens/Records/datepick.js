@@ -6,10 +6,6 @@ import tw from 'twrnc'
 const DatePick = ({modalVisible,setModalVisible,date,setDate}) => {
 
   return (
-    
-   
-        
-        
             <DatePicker 
             modal
             mode="date"
@@ -27,11 +23,6 @@ const DatePick = ({modalVisible,setModalVisible,date,setDate}) => {
                 setModalVisible(false)
             }}
             />
-            
-
-      
-    
-    
   );
 };
 

@@ -1,5 +1,5 @@
 import React,{useEffect, useState,useMemo} from 'react'
-import {View,SafeAreaView,ScrollView,Text,TouchableOpacity,Button,Modal,ToastAndroid} from 'react-native'
+import {View,SafeAreaView,ScrollView,Text,TouchableOpacity,Button,Modal,ToastAndroid, Keyboard,TouchableWithoutFeedback} from 'react-native'
 import tw from 'twrnc'
 import {TextInput} from 'react-native-paper'
 import DropDown from 'react-native-paper-dropdown'
@@ -82,17 +82,17 @@ const AddEditRecord = ({route}) => {
     const [tractor,setTractor] = useState('')
     const [plow,setPlow] = useState('')
     const [place,setPlace] = useState('')
-    const [breakTime,setBreakTime] = useState('')
+    const [breakTime,setBreakTime] = useState('0')
 
-    const [date,setDate] = useState(new Date())
-    const [starttime,setStarttime] = useState(new Date())
-    const [endtime,setEndtime] = useState(new Date())
+    const [date,setDate] = useState(null)
+    const [starttime,setStarttime] = useState(null)
+    const [endtime,setEndtime] = useState(null)
     const [Smins,setSMins]= useState(0)
     const [Emins,setEMins]= useState(0)
 
     const [id,setId] = useState(uuid.v4())
 
-
+    // new Date().toDateString()
     const [modalvisible,setModalVisible] = useState(false)
     const [startmodalVisible,setStartModalVisible] = useState(false)
     const [endmodalVisible,setEndModalVisible] = useState(false)
@@ -133,7 +133,7 @@ const AddEditRecord = ({route}) => {
     
 
     const onSubmit = () => {
-        if(place.trim() === ""){
+        if(place.trim() === "" || driver.trim()==="" || tractor.trim()==="" || date===null || starttime===null || endtime===null){
             ToastAndroid.show("Please fill required fields",ToastAndroid.SHORT)
             return
         }
@@ -141,6 +141,7 @@ const AddEditRecord = ({route}) => {
             ToastAndroid.show("Please fill starttime and endtime correctly",ToastAndroid.SHORT)
             return
         }
+        // new Date().toLocaleString()
         const wmilliseconds = Math.abs(endtime-starttime)
         const data = {
             id,
@@ -148,11 +149,11 @@ const AddEditRecord = ({route}) => {
             drivername:driver,
             tractor,
             plow,
-            date:date.toString(),
+            date:date,
             starttime:starttime.toString(),
             endtime:endtime.toString(),
             breakTime,
-            workmins:(wmilliseconds / (1000 * 60))-breakTime
+            workmins:(wmilliseconds / (1000 * 60))-parseInt(breakTime)
         }
         if(type=="edit"){
             console.log('starttime ',starttime)
@@ -186,7 +187,7 @@ const AddEditRecord = ({route}) => {
                     onChangeText={setPlace}
                 />
                {driverlist.length > 0 &&  <DropDown 
-                    label='Driver'
+                    label='Driver*'
                     list={driverlist}
                     mode={'outlined'}
                     visible={driverdrop}
@@ -197,7 +198,7 @@ const AddEditRecord = ({route}) => {
                     dropDownStyle={tw `mt-2`}
                 />}
                 {tractorlist.length > 0 && <DropDown 
-                    label='Tractor'
+                    label='Tractor*'
                     list={tractorlist}
                     mode={'outlined'}
                     visible={tractordrop}
@@ -208,7 +209,7 @@ const AddEditRecord = ({route}) => {
                     dropDownStyle={tw `mt-2`}
                 />}
                 {plowlist.length > 0 && <DropDown 
-                    label='Plow'
+                    label='Plow*'
                     list={plowlist}
                     mode={'outlined'}
                     visible={plowdrop}
@@ -219,8 +220,36 @@ const AddEditRecord = ({route}) => {
                     dropDownStyle={{marginVertical:10}}
                 />}
                 
-            
-              <TouchableOpacity style={tw `mt-2 h-max w-full px-2 py-3.5 bg-white border rounded-lg`} onPress={() => setModalVisible(true)}>
+                    <TextInput 
+                    mode='outlined'
+                    label={'Date*'}
+                    placeholder={'Date*'}
+                    keyboardType={'number-pad'}
+                    value={date ? date.toLocaleDateString() : ''}
+                    onFocus={()=>setModalVisible(true)}
+                    showSoftInputOnFocus={false}
+                />
+                
+                
+            <TextInput 
+                mode='outlined'
+                label={'StartTime*'}
+                placeholder={'StartTime'}
+                keyboardType={'number-pad'}
+                value={starttime ? starttime.toLocaleTimeString() : ''}
+                onFocus={() => setStartModalVisible(true)}
+                showSoftInputOnFocus={false}
+            />
+            <TextInput 
+                mode='outlined'
+                label={'EndTime*'}
+                placeholder={'EndTime*'}
+                keyboardType={'number-pad'}
+                value={endtime ? endtime.toLocaleTimeString(): ''}
+                onFocus={() => setEndModalVisible(true)}
+                showSoftInputOnFocus={false}
+            />
+              {/* <TouchableOpacity style={tw `mt-2 h-max w-full px-2 py-3.5 bg-white border rounded-lg`} onPress={() => setModalVisible(true)}>
                 <Text style={tw `text-black`}>{date && date.toLocaleDateString()}</Text>
               </TouchableOpacity>
               
@@ -229,7 +258,7 @@ const AddEditRecord = ({route}) => {
             </TouchableOpacity>
             <TouchableOpacity style={tw `mt-2 h-max w-full px-2 py-3.5 bg-white border rounded-lg`} onPress={() => setEndModalVisible(true)}>
                 <Text  style={tw `text-black`}>{endtime && endtime.toLocaleTimeString()}</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TextInput 
                 mode='outlined'
                 label={'Break Time in min'}
@@ -237,6 +266,7 @@ const AddEditRecord = ({route}) => {
                 keyboardType={'number-pad'}
                 value={breakTime}
                 onChangeText={setBreakTime}
+                // defaultValue={breakTime}
             />
             <MyButton cb={onSubmit} value={type=="edit" ? "UPDATE": "ADD"}/>
             {type=="edit" && <MyButton cb={OnDelete} value="DELETE"/>}

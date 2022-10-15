@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React,{useEffect,useMemo} from 'react'
 import {View,ScrollView,SafeAreaView,Text,TouchableOpacity} from 'react-native'
 import tw from 'twrnc'
 import MI from 'react-native-vector-icons/dist/MaterialIcons'
@@ -14,11 +14,18 @@ const RecordRender = ({record}) => {
     await getRecord(record.id,dispatch)
     navigation.navigate('record-add',{type:"edit"})
   }
+  // console.log('record workmins',record.workMins)
+  const minstoHrs = (mins) => {
+    console.log(mins ,'workmins===============')
+    const hrs = mins/60;
+    const min = mins%60;
+    return (min > 0 ? `${hrs.toPrecision(1)} hr: ${min.toPrecision(1)} mins` : `${hrs} hr`)
+  }
   return (
     <TouchableOpacity style={tw `mt-1 w-full h-max py-2 px-1 flex flex-row justify-between border`} onPress={() => addType()}>
       <View style={tw `flex flex-col h-full w-11/12`}>
-          <Text style={tw `font-semibold text-md`}>{record.date? record.date : ''}</Text>
-          <Text style={tw `font-semibold text-md`}>{record.workMins? `${record.workMins} mins` : ''}</Text>
+          <Text style={tw `font-semibold text-md`}>{record.date? `${new Date(record.date).toDateString()} ${new Date(record.date).toLocaleTimeString()}` : ''}</Text>
+          <Text style={tw `font-semibold text-md`}>{record.workMins < 60? `${record.workMins} mins` : minstoHrs(record.workMins)}</Text>
           <Text style={tw `font-semibold text-md`}>{record.farmname? record.farmname : ''}</Text>
           <Text style={tw `font-semibold text-md`}>{record.drivername? record.drivername : ''}</Text>
       </View>
@@ -29,10 +36,13 @@ const RecordRender = ({record}) => {
 
 const RecordMenu = () => {
   const [state,dispatch] = useRecord()
+
+ 
+
   useEffect(() => {
     
     getRecords(dispatch)
-  },[])
+  },[state.records])
   console.log(state)
   console.log(new Date())
   return (
