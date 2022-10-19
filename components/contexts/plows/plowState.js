@@ -2,7 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import React,{useContext,useReducer} from "react"
 import { ADD_PLOW, ALL_PLOW, CLEAR_CURRENT_PLOW, CURRENT_PLOW, DELETE_PLOW, GET_PLOW, PLOW_KEY, UPDATE_PLOW } from "../types"
 import PlowContext from "./plowContext"
-import plowReducer from "./plowReducer"
+import PlowReducer from "./plowReducer"
+
 
 export const usePlow = () => {
     const {state,dispatch} = useContext(PlowContext)
@@ -12,6 +13,7 @@ export const usePlow = () => {
 export const getPlows = async(dispatch) => {
     try {
         const json = await AsyncStorage.getItem(PLOW_KEY)
+        console.log('fsfdfdfdfdf============ ',json)
         if(json){
             const data = JSON.parse(json)
             dispatch({
@@ -28,6 +30,7 @@ export const getPlow = async(key,dispatch) => {
     try {
         const json = await AsyncStorage.getItem(key)
         const data = JSON.parse(json)
+        console.log(' sdsdsd get plow ============== ',data)
         dispatch({
             type:GET_PLOW,
             payload:data
@@ -41,6 +44,7 @@ export const addPlow = async(key,plow,dispatch) => {
     try {
         const json = JSON.stringify(plow)
         await AsyncStorage.setItem(key,json)
+        console.log(json, 'dfsdfsdfsdfsdf add plow =====================')
         const data = {
             id:plow.id,
             name:plow.name
@@ -99,7 +103,7 @@ const PlowState = ({children}) => {
         errors:null,
         filtered:null
     }
-    const [state,dispatch] = useReducer(plowReducer,initialState)
+    const [state,dispatch] = useReducer(PlowReducer,initialState)
 
     return (
         <PlowContext.Provider value={{ state,dispatch }}>

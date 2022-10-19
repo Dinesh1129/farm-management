@@ -1,5 +1,5 @@
 import {createContext} from 'react'
 
-const PlowContext = createContext()
+const plowContext = createContext()
 
-export default PlowContext;
+export default plowContext;
