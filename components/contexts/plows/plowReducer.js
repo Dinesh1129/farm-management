@@ -1,12 +1,12 @@
 import { ADD_PLOW, ALL_PLOW, CLEAR_CURRENT_PLOW, CURRENT_PLOW, DELETE_PLOW, GET_PLOW, PLOW_KEY, UPDATE_PLOW } from "../types"
-
-export default (state,action) => {
+import AsyncStorage from "@react-native-async-storage/async-storage"
+const PlowReducer =  (state,action) => {
     switch(action.type){
         case ALL_PLOW:
             return {
                 ...state,
                 plows:[...action.payload]
-            }
+            };
         case ADD_PLOW:
             async function quickcall(){
                 const data = [...state?.plows,action.payload]
@@ -67,3 +67,5 @@ export default (state,action) => {
             throw new Error('unspported type')
     }
 }
+
+export default PlowReducer

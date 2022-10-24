@@ -20,6 +20,7 @@ import RecordMenu from './screens/Records/RecordMenu'
 import AddEditRecord from './screens/Records/AddEditRecord'
 import { Provider as PaperProvider } from 'react-native-paper';
 import RecordState from './components/contexts/Records/recordState'
+import SearchRecordMenu from './screens/SearchRecords/SearchRecordMenu'
 
 const Stack = createNativeStackNavigator()
 
@@ -58,11 +59,11 @@ const App = () => {
           <RecordState>
             <PaperProvider>
             <NavigationContainer>
-              <Stack.Navigator initialRouteName='login' screenOptions={{
+              <Stack.Navigator initialRouteName='menu' screenOptions={{
                 headerShown:false
               }}>
-                <Stack.Screen name='login' component={Login}/>
-                <Stack.Screen name='register' component={Registration}/>
+                {/* <Stack.Screen name='login' component={Login}/> */}
+                {/* <Stack.Screen name='register' component={Registration}/> */}
                 <Stack.Screen name='menu' component={Menu}/>
                 <Stack.Screen name='tractors' component={Tractors} options={{
                   header:({route}) => <Header name={route.name} location={'tractors-add'}/>,
@@ -101,11 +102,15 @@ const App = () => {
                   headerShown:true
                 }}/>
                 <Stack.Screen name='records-menu' component={RecordMenu} options={{
-                  header:({route}) => <Header name={route.name} location={'record-add'}/>,
+                  header:({route}) => <Header name={"Records"} location={'record-add'}/>,
                   headerShown:true
                 }}/>
                 <Stack.Screen name='record-add' component={AddEditRecord} options={{
                   header:({route}) => <HeaderSimple name={"Add your Record"}/>,
+                  headerShown:true
+                }}/>
+                 <Stack.Screen name='search-record' component={SearchRecordMenu} options={{
+                  header:({route}) => <HeaderSimple name={"Search Record"}/>,
                   headerShown:true
                 }}/>
                 {/* Checking fork to start development */}
