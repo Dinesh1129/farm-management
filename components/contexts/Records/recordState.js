@@ -21,7 +21,7 @@ export const getRecords = async(dispatch) => {
         }
         
         
-        // await AsyncStorage.clear()
+        
     } catch (error) {
         console.log(error,'error in gets records')
     }
@@ -49,7 +49,7 @@ export const addRecord = async (key,record,dispatch) => {
             drivername:record.drivername,
             farmname:record.place,
             date:record.date,
-            workMins: record.workmins
+             worktime:record.worktime
         }
         
         dispatch({
@@ -63,7 +63,6 @@ export const addRecord = async (key,record,dispatch) => {
 
 export const updateRecord = async (key,record,dispatch)=>{
     try {
-        console.log('in record update method====================================================')
         const json = JSON.stringify(record)
         await AsyncStorage.setItem(key,json)
         dispatch({

@@ -1,9 +1,7 @@
-import React, { useState,useEffect } from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View,TouchableOpacity,SafeAreaView } from "react-native";
+import React from "react";
 import DatePicker from "react-native-date-picker";
-import tw from 'twrnc'
 
-const DatePick = ({modalVisible,setModalVisible,date,setDate}) => {
+const DatePick = ({modalVisible,setModalVisible,setDate}) => {
 
   return (
             <DatePicker 
@@ -13,7 +11,8 @@ const DatePick = ({modalVisible,setModalVisible,date,setDate}) => {
             open={modalVisible}
             onConfirm={(dat) => {
                 setDate(dat)
-                console.log(dat.toLocaleString())
+                console.log(dat)
+                
                 setModalVisible(false)
             }}
             onCancel={() => {

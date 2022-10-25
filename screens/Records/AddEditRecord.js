@@ -1,9 +1,8 @@
-import React,{useEffect, useState,useMemo} from 'react'
-import {View,SafeAreaView,ScrollView,Text,TouchableOpacity,Button,Modal,ToastAndroid, Keyboard,TouchableWithoutFeedback} from 'react-native'
+import React,{useEffect, useState} from 'react'
+import {View,SafeAreaView,ScrollView} from 'react-native'
 import tw from 'twrnc'
 import {TextInput} from 'react-native-paper'
 import DropDown from 'react-native-paper-dropdown'
-import DatePicker from 'react-native-date-picker'
 import DatePick from './datepick'
 import StartTime from './startTime'
 import EndTime from './endTime'
@@ -14,51 +13,9 @@ import {useDriver} from '../../components/contexts/driver/driverState'
 import { useTractor } from '../../components/contexts/Tractors/tractorState'
 import { usePlow } from '../../components/contexts/plows/plowState'
 import { addRecord, clearCurrentRecord, deleteRecord, updateRecord, useRecord } from '../../components/contexts/Records/recordState'
+import moment from 'moment'
 
-// const driverlist = [
-//     {
-//         label:"Driver A",
-//         value: "Driver A"
-//     },
-//     {
-//         label:"Driver B",
-//         value: "Driver B"
-//     },
-//     {
-//         label:"Driver C",
-//         value: "Driver C"
-//     },
-// ]
 
-// const tractorlist = [
-//     {
-//         label:"Tractor A",
-//         value: "Tractor A"
-//     },
-//     {
-//         label:"Tractor B",
-//         value: "Tractor B"
-//     },
-//     {
-//         label:"Tractor C",
-//         value: "Tractor C"
-//     },
-// ]
-
-// const plowlist = [
-//     {
-//         label:"PLOW A",
-//         value: "PLOW A"
-//     },
-//     {
-//         label:"PLOW B",
-//         value: "PLOW B"
-//     },
-//     {
-//         label:"PLOW C",
-//         value: "PLOW C"
-//     },
-// ]
 
 const AddEditRecord = ({route}) => {
     const [driverstate,driverDispatch] = useDriver()
@@ -87,8 +44,7 @@ const AddEditRecord = ({route}) => {
     const [date,setDate] = useState(null)
     const [starttime,setStarttime] = useState(null)
     const [endtime,setEndtime] = useState(null)
-    const [Smins,setSMins]= useState(0)
-    const [Emins,setEMins]= useState(0)
+    
 
     const [id,setId] = useState(uuid.v4())
 
@@ -101,7 +57,7 @@ const AddEditRecord = ({route}) => {
         const drivers = driverstate.drivers.map(val => ({value:val.name,label:val.name}))
         const tractors = tractorstate.tractors.map(val => ({value:val.name,label:val.name}))
         const plows = plowstate.plows.map(val => ({value:val.name,label:val.name}))
-        console.log(driverstate)
+        
         setDriverlist(() => drivers)
 
         setTractorlist(() => tractors)
@@ -110,7 +66,7 @@ const AddEditRecord = ({route}) => {
 
         if(type=='edit'){
             const current = recordstate.current
-            console.log(current)
+            
             setId(current.id)
             setPlace(current.place)
             setDriver(current.drivername)
@@ -128,7 +84,17 @@ const AddEditRecord = ({route}) => {
 
 
 
-    console.log(driverlist)
+    
+
+    const workTime = (hrs,mins) => {
+        if(hrs=="00"){
+         return `${mins} mins`
+        }
+        if(mins=="00"){
+         return `${mins} mins`
+        }
+        return `${hrs} hr : ${mins} mins`
+       }
 
     
 
@@ -141,8 +107,12 @@ const AddEditRecord = ({route}) => {
             ToastAndroid.show("Please fill starttime and endtime correctly",ToastAndroid.SHORT)
             return
         }
-        // new Date().toLocaleString()
-        const wmilliseconds = Math.abs(endtime-starttime)
+       
+        var hrs = moment.utc(moment(endtime,'HH:mm:ss').diff(moment(starttime,'HH:mm:ss'))).subtract(breakTime,'minutes').format("HH");
+        var min = moment.utc(moment(endtime,'HH:mm:ss').diff(moment(starttime,'HH:mm:ss'))).subtract(breakTime,'minutes').format("mm");
+        
+        var worktime = workTime(hrs,min)
+        
         const data = {
             id,
             place,
@@ -153,13 +123,12 @@ const AddEditRecord = ({route}) => {
             starttime:starttime.toString(),
             endtime:endtime.toString(),
             breakTime,
-            workmins:(wmilliseconds / (1000 * 60))-parseInt(breakTime)
+            worktime:worktime
         }
+       
+       
         if(type=="edit"){
-            console.log('starttime ',starttime)
-            console.log('endtime',endtime)
-            console.log('data mins',data.workmins)
-            console.log('willi second',wmilliseconds)
+            
             updateRecord(data.id,data,recordDispatch)
         }else{
             addRecord(data.id,data,recordDispatch)
@@ -249,16 +218,7 @@ const AddEditRecord = ({route}) => {
                 onFocus={() => setEndModalVisible(true)}
                 showSoftInputOnFocus={false}
             />
-              {/* <TouchableOpacity style={tw `mt-2 h-max w-full px-2 py-3.5 bg-white border rounded-lg`} onPress={() => setModalVisible(true)}>
-                <Text style={tw `text-black`}>{date && date.toLocaleDateString()}</Text>
-              </TouchableOpacity>
-              
-            <TouchableOpacity style={tw `mt-2 h-max w-full px-2 py-3.5 bg-white border rounded-lg`} onPress={() => setStartModalVisible(true)}>
-                <Text  style={tw `text-black`}>{starttime &&  starttime.toLocaleTimeString()}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={tw `mt-2 h-max w-full px-2 py-3.5 bg-white border rounded-lg`} onPress={() => setEndModalVisible(true)}>
-                <Text  style={tw `text-black`}>{endtime && endtime.toLocaleTimeString()}</Text>
-            </TouchableOpacity> */}
+             
             <TextInput 
                 mode='outlined'
                 label={'Break Time in min'}
@@ -266,14 +226,13 @@ const AddEditRecord = ({route}) => {
                 keyboardType={'number-pad'}
                 value={breakTime}
                 onChangeText={setBreakTime}
-                // defaultValue={breakTime}
             />
             <MyButton cb={onSubmit} value={type=="edit" ? "UPDATE": "ADD"}/>
             {type=="edit" && <MyButton cb={OnDelete} value="DELETE"/>}
             
-                <DatePick modalVisible={modalvisible} date={date} setDate={setDate} setModalVisible={setModalVisible}/>
-                <StartTime setStartModalVisible={setStartModalVisible} startmodalVisible={startmodalVisible} setSMins={setSMins} starttime={starttime} setStarttime={setStarttime}/>
-                <EndTime endmodalVisible={endmodalVisible} setEndModalVisible={setEndModalVisible} setEMins={setEMins} endtime={endtime} setEndtime={setEndtime}/>
+                <DatePick modalVisible={modalvisible} setDate={setDate} setModalVisible={setModalVisible}/>
+                <StartTime setStartModalVisible={setStartModalVisible} startmodalVisible={startmodalVisible} setStarttime={setStarttime}/>
+                <EndTime endmodalVisible={endmodalVisible} setEndModalVisible={setEndModalVisible} setEndtime={setEndtime}/>
             </View>
         </ScrollView>
     </SafeAreaView>

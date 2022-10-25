@@ -1,9 +1,9 @@
 import React from 'react'
-import {View,Text,TouchableOpacity,SafeAreaView,FlatList,ScrollView} from 'react-native'
+import {View,Text,TouchableOpacity,SafeAreaView,ScrollView} from 'react-native'
 import tw from 'twrnc'
 import MI from 'react-native-vector-icons/dist/MaterialIcons'
 import {useNavigation} from '@react-navigation/native'
-import { getDriver, setCurrentDriver, useDriver } from '../../components/contexts/driver/driverState'
+import { getDriver, useDriver } from '../../components/contexts/driver/driverState'
 import { getTractor, useTractor } from '../../components/contexts/Tractors/tractorState'
 import { getPlow, usePlow } from '../../components/contexts/plows/plowState'
 
@@ -43,11 +43,6 @@ const Tractors = () => {
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
         <ScrollView style={tw `min-h-screen w-full`}>
             <View style={tw `h-full w-full p-2`}>
-                {/* <FlatList 
-                    data={tractors}
-                    keyExtractor={e =>e}
-                    renderItem={RenderView}
-                /> */}
                 {state.tractors?.map(val => <RenderView key={val} item={val} location={'tractors-edit'}/>)}
             </View>
     </ScrollView>

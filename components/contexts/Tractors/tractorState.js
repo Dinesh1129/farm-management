@@ -12,10 +12,6 @@ export const useTractor = () => {
 
 export const getTractors = async(dispatch) => {
     try {
-        // const keys = await AsyncStorage.getAllKeys()
-        // const json = await AsyncStorage.multiGet([...keys])
-        // const data = json.map(arr => JSON.parse(arr[1]))
-        // console.log(data,'data in get drivers--------------')
         const json = await AsyncStorage.getItem(TRACTOR_KEY)
         if(json){
             const data = JSON.parse(json)
@@ -26,7 +22,7 @@ export const getTractors = async(dispatch) => {
         }
         
         
-        // await AsyncStorage.clear()
+        
     } catch (error) {
         console.log(error,'error in gets tractors')
     }

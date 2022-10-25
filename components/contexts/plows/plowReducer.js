@@ -25,7 +25,7 @@ const PlowReducer =  (state,action) => {
         case UPDATE_PLOW:
             async function updatecall(){
                 const data = state.plows.map(plow => plow.id === action.payload.id ? {...plow,name:action.payload.name} : plow)
-                console.log('changing data, ',data)
+               
                 if(data.length>0){
                     await AsyncStorage.setItem(PLOW_KEY,JSON.stringify(data))
                 }else{

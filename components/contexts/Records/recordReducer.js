@@ -25,8 +25,8 @@ export default (state,action) => {
             };
         case UPDATE_RECORD:
             async function updatecall(){
-                const data = state.records.map(record => record.id === action.payload.id ? {...record,drivername:action.payload.drivername,farmname:action.payload.place,date:action.payload.date,workMins: action.payload.workmins} : record)
-                console.log('changing data, ',data)
+                const data = state.records.map(record => record.id === action.payload.id ? {...record,drivername:action.payload.drivername,farmname:action.payload.place,date:action.payload.date,worktime:action.payload.worktime} : record)
+                
                 if(data.length>0){
                     await AsyncStorage.setItem(RECORD_KEY,JSON.stringify(data))
                 }else{

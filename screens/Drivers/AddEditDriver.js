@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import {View,Text,TouchableOpacity,SafeAreaView,FlatList,Button,ScrollView,ToastAndroid} from 'react-native'
+import {View,SafeAreaView,ScrollView,ToastAndroid} from 'react-native'
 import tw from 'twrnc'
 import { addDriver, clearCurrentDriver, deleteDriver, updateDriver, useDriver } from '../../components/contexts/driver/driverState'
 import { MyButton } from '../Tractors/AddEditTractor'
@@ -68,7 +68,6 @@ const AddEditDriver = ({route}) => {
                         keyboardType='default'
                         placeholder='Name*'
                         label={'Name*'}
-                        // outlineColor="blue"
                         mode={'outlined'}
                         value={Name}
                         style={tw `mt-2`}
@@ -101,7 +100,6 @@ const AddEditDriver = ({route}) => {
                         style={tw `mt-2`}
                         onChangeText={setlicense}
                     />
-                    {/* <MyButton cb={() => type? UpdateItem(item.name,item): AddItem(item.name)}/> */}
                     <MyButton cb={OnSubmit} value={type=="edit"? "Update" : "Add"}/>
                     {type=="edit" && <MyButton cb={OnDelete} value="Delete"/>}
                 </View>
