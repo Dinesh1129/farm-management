@@ -26,7 +26,6 @@ const TractorReducer = (state,action) => {
         case UPDATE_TRACTOR:
             async function updatecall(){
                 const data = state.tractors.map(tractor => tractor.id === action.payload.id ? {...tractor,name:action.payload.name} : tractor)
-                console.log('changing data, ',data)
                 if(data.length>0){
                     await AsyncStorage.setItem(TRACTOR_KEY,JSON.stringify(data))
                 }else{

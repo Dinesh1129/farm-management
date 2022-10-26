@@ -1,9 +1,7 @@
-import React, { useState,useEffect } from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View,TouchableOpacity,SafeAreaView } from "react-native";
+import React from "react";
 import DatePicker from "react-native-date-picker";
-import tw from 'twrnc'
 
-const EndTime = ({setEndModalVisible,endmodalVisible,endtime,setEndtime,setEMins}) => {
+const EndTime = ({setEndModalVisible,endmodalVisible,setEndtime}) => {
     return (
         <DatePicker 
         modal
@@ -12,8 +10,8 @@ const EndTime = ({setEndModalVisible,endmodalVisible,endtime,setEndtime,setEMins
         open={endmodalVisible}
         onConfirm={(tim) => {
             setEndtime(tim)
-            setEMins(tim)
-            console.log(tim.toLocaleString())
+            
+            
             setEndModalVisible(false)
         }}
         onCancel={() => {

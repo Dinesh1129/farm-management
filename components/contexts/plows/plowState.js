@@ -13,7 +13,7 @@ export const usePlow = () => {
 export const getPlows = async(dispatch) => {
     try {
         const json = await AsyncStorage.getItem(PLOW_KEY)
-        console.log('fsfdfdfdfdf============ ',json)
+        
         if(json){
             const data = JSON.parse(json)
             dispatch({
@@ -30,7 +30,7 @@ export const getPlow = async(key,dispatch) => {
     try {
         const json = await AsyncStorage.getItem(key)
         const data = JSON.parse(json)
-        console.log(' sdsdsd get plow ============== ',data)
+        
         dispatch({
             type:GET_PLOW,
             payload:data
@@ -44,7 +44,7 @@ export const addPlow = async(key,plow,dispatch) => {
     try {
         const json = JSON.stringify(plow)
         await AsyncStorage.setItem(key,json)
-        console.log(json, 'dfsdfsdfsdfsdf add plow =====================')
+       
         const data = {
             id:plow.id,
             name:plow.name

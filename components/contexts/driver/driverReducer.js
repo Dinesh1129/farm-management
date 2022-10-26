@@ -26,7 +26,7 @@ const driverReducer = (state,action) => {
         case UPDATE_DRIVER:
             async function updatecall(){
                 const data = state.drivers.map(driver => driver.id === action.payload.id ? {...driver,name:action.payload.name} : driver)
-                console.log('changing data, ',data)
+                
                 if(data.length>0){
                     await AsyncStorage.setItem(DRIVERS_KEY,JSON.stringify(data))
                 }else{
