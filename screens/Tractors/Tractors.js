@@ -8,7 +8,7 @@ import { getTractor, useTractor } from '../../components/contexts/Tractors/tract
 import { getPlow, usePlow } from '../../components/contexts/plows/plowState'
 
 
-// const tractors = ['TractorA','TractorB','TractorC']
+
 
 
 

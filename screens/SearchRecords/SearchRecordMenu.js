@@ -14,7 +14,7 @@ const SearchRecordMenu = () => {
 
     useMemo(() => {
       getRecords(dispatch)
-    },[state])
+    },[JSON.stringify(state.records)])
 
     const change = useMemo(() => {
       const filtered = state.records.slice(0,upto+1)
