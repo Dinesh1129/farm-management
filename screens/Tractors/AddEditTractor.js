@@ -8,7 +8,7 @@ import {TextInput} from 'react-native-paper'
 
 export const MyButton = ({value="Add/Edit",cb={}}) => {
     return (
-        <TouchableOpacity style={tw `mt-4 py-1 px-2 w-full bg-[#3b82f6] rounded-lg`} onPress={() => cb()}>
+        <TouchableOpacity style={tw `mt-4 mb-3 py-1 px-2 w-full bg-[#3b82f6] rounded-lg`} onPress={() => cb()}>
             <Text style={tw `text-center text-lg font-semibold text-white`}>{value}</Text>
         </TouchableOpacity>
     )

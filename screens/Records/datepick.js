@@ -11,8 +11,6 @@ const DatePick = ({modalVisible,setModalVisible,setDate}) => {
             open={modalVisible}
             onConfirm={(dat) => {
                 setDate(dat)
-                console.log(dat)
-                
                 setModalVisible(false)
             }}
             onCancel={() => {

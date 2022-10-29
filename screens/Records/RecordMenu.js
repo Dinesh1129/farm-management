@@ -37,7 +37,7 @@ const RecordMenu = () => {
 
   useLayoutEffect(() => {
     getRecords(dispatch)
-  },[state.records])
+  },[JSON.stringify(state.records)])
   
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
