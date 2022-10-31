@@ -1,4 +1,4 @@
-package com.projecta.newarchitecture;
+package com.tractrack.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.projecta.BuildConfig;
-import com.projecta.newarchitecture.components.MainComponentsRegistry;
-import com.projecta.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.tractrack.BuildConfig;
+import com.tractrack.newarchitecture.components.MainComponentsRegistry;
+import com.tractrack.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

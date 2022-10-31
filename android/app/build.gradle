@@ -141,7 +141,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.projecta"
+        applicationId "com.tractrack"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
