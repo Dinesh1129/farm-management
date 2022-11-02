@@ -91,7 +91,7 @@ const AddEditRecord = ({route}) => {
          return `${mins} mins`
         }
         if(mins=="00"){
-         return `${mins} mins`
+         return `${hrs} hr`
         }
         return `${hrs} hr : ${mins} mins`
        }
