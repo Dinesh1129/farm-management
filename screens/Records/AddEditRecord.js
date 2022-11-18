@@ -14,6 +14,12 @@ import { addRecord, clearCurrentRecord, deleteRecord, updateRecord, useRecord } 
 
 
 
+let hrsList = [{label:'1',value:1},{label:'2',value:2},{label:'3',value:3},{label:'4',value:4},{label:'5',value:5},{label:'6',value:6},{label:'7',value:7},
+{label:'8',value:8},{label:'9',value:9},{label:'10',value:10},{label:'11',value:11},{label:'12',value:12},{label:'13',value:13},{label:'14',value:14},
+{label:'15',value:15}]
+let minList = [{label:'5',value:5},{label:'10',value:10},{label:'15',value:15},{label:'20',value:20},{label:'25',value:25},{label:'30',value:30},{label:'35',value:35},
+{label:'40',value:40},{label:'45',value:45},{label:'50',value:50},{label:'55',value:55}]
+
 
 const AddEditRecord = ({route}) => {
     const [driverstate,driverDispatch] = useDriver()
@@ -32,6 +38,8 @@ const AddEditRecord = ({route}) => {
     const [driverdrop,setDriverdrop] = useState(false)
     const [tractordrop,setTractordrop] = useState(false)
     const [plowdrop,setPlowdrop] = useState(false)
+    const [hrdrop,setHrdrop] = useState(false)
+    const [mindrop,setMindrop] = useState(false)
 
     const [driver,setDriver] = useState('')
     const [tractor,setTractor] = useState('')
@@ -71,8 +79,8 @@ const AddEditRecord = ({route}) => {
             setTractor(current.tractor)
             setPlow(current.plow)
             setDate(new Date(current.date))
-            setTotalhr(current.totalHr)
-            setTotalmins(current.totalmins)
+            setTotalhr(parseInt(current.totalHr))
+            setTotalmins(parseInt(current.totalmins))
             setHourrate(current.hourRate)
             setFarmer(current.farmer)
         }
@@ -89,7 +97,7 @@ const AddEditRecord = ({route}) => {
        }
 
     const onSubmit = () => {
-        if(farmer.trim() === "" || driver.trim()==="" || tractor.trim()==="" || date===null || (totalhr==0 && totalmins==0) || hourRate.trim()===""){
+        if(farmer.trim() === "" || driver.trim()==="" || tractor.trim()==="" || date===null || (totalhr==0 && totalmins==0) || hourRate==0){
             ToastAndroid.show("Please fill required fields",ToastAndroid.SHORT)
             return
         }
@@ -127,7 +135,7 @@ const AddEditRecord = ({route}) => {
    }
 
    const totalamount = useMemo(() => {
-    return (totalhr*hourRate)+((totalmins/60)*hourRate)
+    return ((totalhr*hourRate)+((totalmins/60)*hourRate)).toFixed(2)
    },[totalhr,totalmins,hourRate])
 
   return (
@@ -194,22 +202,28 @@ const AddEditRecord = ({route}) => {
                     showSoftInputOnFocus={false}
                 />
                 
-                <TextInput 
-                    mode='outlined'
-                    label={'Total hr*'}
-                    placeholder={'Total hr*'}
-                    keyboardType={'number-pad'}
-                    value={totalhr ? totalhr.toString() : ''}
-                    onChangeText={setTotalhr}
+                <DropDown 
+                    label='Total Hr*'
+                    list={hrsList}
+                    mode={'outlined'}
+                    visible={hrdrop}
+                    showDropDown={() => setHrdrop(true)}
+                    onDismiss={() => setHrdrop(false)}
+                    value={totalhr}
+                    setValue={setTotalhr}
+                    dropDownStyle={{marginVertical:10}}
                 />
 
-                <TextInput 
-                    mode='outlined'
-                    label={'Total mins*'}
-                    placeholder={'Total mins*'}
-                    keyboardType={'number-pad'}
-                    value={totalmins ? totalmins.toString() : ''}
-                    onChangeText={setTotalmins}
+                <DropDown 
+                    label='Total mins*'
+                    list={minList}
+                    mode={'outlined'}
+                    visible={mindrop}
+                    showDropDown={() => setMindrop(true)}
+                    onDismiss={() => setMindrop(false)}
+                    value={totalmins}
+                    setValue={setTotalmins}
+                    dropDownStyle={{marginVertical:10}}
                 />
             <TextInput 
                 mode='outlined'
