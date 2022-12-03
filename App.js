@@ -59,11 +59,11 @@ const App = () => {
           <RecordState>
             <PaperProvider>
             <NavigationContainer>
-              <Stack.Navigator initialRouteName='menu' screenOptions={{
+              <Stack.Navigator initialRouteName='login' screenOptions={{
                 headerShown:false
               }}>
-                {/* <Stack.Screen name='login' component={Login}/> */}
-                {/* <Stack.Screen name='register' component={Registration}/> */}
+                <Stack.Screen name='login' component={Login}/>
+                <Stack.Screen name='register' component={Registration}/>
                 <Stack.Screen name='menu' component={Menu}/>
                 <Stack.Screen name='tractors' component={Tractors} options={{
                   header:({route}) => <Header name={route.name} location={'tractors-add'}/>,
