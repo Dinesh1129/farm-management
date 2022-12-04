@@ -1,11 +1,9 @@
-import React,{useEffect, useState} from 'react'
+import React,{useEffect, useMemo, useState} from 'react'
 import {View,SafeAreaView,ScrollView,ToastAndroid} from 'react-native'
 import tw from 'twrnc'
 import {TextInput} from 'react-native-paper'
 import DropDown from 'react-native-paper-dropdown'
 import DatePick from './datepick'
-import StartTime from './startTime'
-import EndTime from './endTime'
 import { MyButton } from '../Tractors/AddEditTractor'
 import uuid from 'react-native-uuid'
 import {useNavigation} from '@react-navigation/native'
@@ -13,8 +11,14 @@ import {useDriver} from '../../components/contexts/driver/driverState'
 import { useTractor } from '../../components/contexts/Tractors/tractorState'
 import { usePlow } from '../../components/contexts/plows/plowState'
 import { addRecord, clearCurrentRecord, deleteRecord, updateRecord, useRecord } from '../../components/contexts/Records/recordState'
-import moment from 'moment'
 
+
+
+let hrsList = [{label:'1',value:1},{label:'2',value:2},{label:'3',value:3},{label:'4',value:4},{label:'5',value:5},{label:'6',value:6},{label:'7',value:7},
+{label:'8',value:8},{label:'9',value:9},{label:'10',value:10},{label:'11',value:11},{label:'12',value:12},{label:'13',value:13},{label:'14',value:14},
+{label:'15',value:15}]
+let minList = [{label:'5',value:5},{label:'10',value:10},{label:'15',value:15},{label:'20',value:20},{label:'25',value:25},{label:'30',value:30},{label:'35',value:35},
+{label:'40',value:40},{label:'45',value:45},{label:'50',value:50},{label:'55',value:55}]
 
 
 const AddEditRecord = ({route}) => {
@@ -34,24 +38,26 @@ const AddEditRecord = ({route}) => {
     const [driverdrop,setDriverdrop] = useState(false)
     const [tractordrop,setTractordrop] = useState(false)
     const [plowdrop,setPlowdrop] = useState(false)
+    const [hrdrop,setHrdrop] = useState(false)
+    const [mindrop,setMindrop] = useState(false)
 
     const [driver,setDriver] = useState('')
     const [tractor,setTractor] = useState('')
     const [plow,setPlow] = useState('')
+    const [farmer,setFarmer] = useState('')
     const [place,setPlace] = useState('')
-    const [breakTime,setBreakTime] = useState('0')
+    
 
     const [date,setDate] = useState(null)
-    const [starttime,setStarttime] = useState(null)
-    const [endtime,setEndtime] = useState(null)
+    const [totalhr,setTotalhr] = useState(0)
+    const [totalmins,setTotalmins] = useState(0)
+    const [hourRate,setHourrate] = useState(0)
     
 
     const [id,setId] = useState(uuid.v4())
 
     // new Date().toDateString()
     const [modalvisible,setModalVisible] = useState(false)
-    const [startmodalVisible,setStartModalVisible] = useState(false)
-    const [endmodalVisible,setEndModalVisible] = useState(false)
 
     useEffect(() => {
         const drivers = driverstate.drivers.map(val => ({value:val.name,label:val.name}))
@@ -71,47 +77,30 @@ const AddEditRecord = ({route}) => {
             setPlace(current.place)
             setDriver(current.drivername)
             setTractor(current.tractor)
-            setBreakTime(current.breakTime)
             setPlow(current.plow)
             setDate(new Date(current.date))
-            setStarttime(new Date(current.starttime))
-            setEndtime(new Date(current.endtime))
+            setTotalhr(parseInt(current.totalHr))
+            setTotalmins(parseInt(current.totalmins))
+            setHourrate(current.hourRate)
+            setFarmer(current.farmer)
         }
     },[])
-    
-    
-
-
-
-
-    
 
     const workTime = (hrs,mins) => {
-        if(hrs=="00"){
+        if(hrs==0){
          return `${mins} mins`
         }
-        if(mins=="00"){
+        if(mins==0){
          return `${hrs} hr`
         }
         return `${hrs} hr : ${mins} mins`
        }
 
-    
-
     const onSubmit = () => {
-        if(place.trim() === "" || driver.trim()==="" || tractor.trim()==="" || date===null || starttime===null || endtime===null){
+        if(farmer.trim() === "" || driver.trim()==="" || tractor.trim()==="" || date===null || (totalhr==0 && totalmins==0) || hourRate==0){
             ToastAndroid.show("Please fill required fields",ToastAndroid.SHORT)
             return
         }
-        if(starttime>=endtime){
-            ToastAndroid.show("Please fill starttime and endtime correctly",ToastAndroid.SHORT)
-            return
-        }
-       
-        var hrs = moment.utc(moment(endtime,'HH:mm:ss').diff(moment(starttime,'HH:mm:ss'))).subtract(breakTime,'minutes').format("HH");
-        var min = moment.utc(moment(endtime,'HH:mm:ss').diff(moment(starttime,'HH:mm:ss'))).subtract(breakTime,'minutes').format("mm");
-        
-        var worktime = workTime(hrs,min)
         
         const data = {
             id,
@@ -120,10 +109,12 @@ const AddEditRecord = ({route}) => {
             tractor,
             plow,
             date:date,
-            starttime:starttime.toString(),
-            endtime:endtime.toString(),
-            breakTime,
-            worktime:worktime
+            totaltime:workTime(totalhr,totalmins).toString(),
+            totalHr:totalhr.toString(),
+            totalmins:totalmins.toString(),
+            hourRate,
+            totalamount,
+            farmer
         }
        
        
@@ -143,12 +134,24 @@ const AddEditRecord = ({route}) => {
         navigation.goBack()
    }
 
+   const totalamount = useMemo(() => {
+    return ((totalhr*hourRate)+((totalmins/60)*hourRate)).toFixed(2)
+   },[totalhr,totalmins,hourRate])
+
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
         <ScrollView style={tw `min-h-screen w-full`}>
             <View style={tw `mt-2 w-full px-4 min-h-screen flex flex-col space-y-2`}>
+            <TextInput  
+                    label={'Farmer*'}
+                    mode={'outlined'}
+                    placeholder={'Farmer'}
+                    keyboardType={'default'}
+                    value={farmer}
+                    onChangeText={setFarmer}
+                />
                 <TextInput  
-                    label={'Place*'}
+                    label={'Place'}
                     mode={'outlined'}
                     placeholder={'Place'}
                     keyboardType={'default'}
@@ -199,40 +202,51 @@ const AddEditRecord = ({route}) => {
                     showSoftInputOnFocus={false}
                 />
                 
-                
+                <DropDown 
+                    label='Total Hr*'
+                    list={hrsList}
+                    mode={'outlined'}
+                    visible={hrdrop}
+                    showDropDown={() => setHrdrop(true)}
+                    onDismiss={() => setHrdrop(false)}
+                    value={totalhr}
+                    setValue={setTotalhr}
+                    dropDownStyle={{marginVertical:10}}
+                />
+
+                <DropDown 
+                    label='Total mins*'
+                    list={minList}
+                    mode={'outlined'}
+                    visible={mindrop}
+                    showDropDown={() => setMindrop(true)}
+                    onDismiss={() => setMindrop(false)}
+                    value={totalmins}
+                    setValue={setTotalmins}
+                    dropDownStyle={{marginVertical:10}}
+                />
             <TextInput 
                 mode='outlined'
-                label={'StartTime*'}
-                placeholder={'StartTime'}
+                label={'Hourly Rate*'}
+                placeholder={'Hourly Rate'}
                 keyboardType={'number-pad'}
-                value={starttime ? starttime.toLocaleTimeString() : ''}
-                onFocus={() => setStartModalVisible(true)}
-                showSoftInputOnFocus={false}
+                value={hourRate ? hourRate.toString() : ''}
+                onChangeText={setHourrate}
             />
+
             <TextInput 
                 mode='outlined'
-                label={'EndTime*'}
-                placeholder={'EndTime*'}
+                placeholder={'Total Amount'}
                 keyboardType={'number-pad'}
-                value={endtime ? endtime.toLocaleTimeString(): ''}
-                onFocus={() => setEndModalVisible(true)}
-                showSoftInputOnFocus={false}
+                value={`Rs.${totalamount.toString()}`}
+                disabled={true}
             />
-             
-            <TextInput 
-                mode='outlined'
-                label={'Break Time in min'}
-                placeholder={'Break Time in min'}
-                keyboardType={'number-pad'}
-                value={breakTime}
-                onChangeText={setBreakTime}
-            />
+        
             <MyButton cb={onSubmit} value={type=="edit" ? "UPDATE": "ADD"}/>
             {type=="edit" && <MyButton cb={OnDelete} value="DELETE"/>}
             
                 <DatePick modalVisible={modalvisible} setDate={setDate} setModalVisible={setModalVisible}/>
-                <StartTime setStartModalVisible={setStartModalVisible} startmodalVisible={startmodalVisible} setStarttime={setStarttime}/>
-                <EndTime endmodalVisible={endmodalVisible} setEndModalVisible={setEndModalVisible} setEndtime={setEndtime}/>
+        
             </View>
         </ScrollView>
     </SafeAreaView>

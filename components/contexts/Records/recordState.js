@@ -49,7 +49,8 @@ export const addRecord = async (key,record,dispatch) => {
             drivername:record.drivername,
             farmname:record.place,
             date:record.date,
-             worktime:record.worktime
+             totaltime:record.totaltime,
+             farmer:record.farmer
         }
         
         dispatch({
