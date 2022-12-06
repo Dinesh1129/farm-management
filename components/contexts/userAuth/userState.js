@@ -8,9 +8,8 @@ export const useloginAuth = () => {
 }
 
 export const login = async(email,password) => {
-    console.log(email,password)
     try {
-        const res = await fetch('http://192.168.0.106:5000/user/login',{
+        const res = await fetch('https://tractrack.netlify.app/.netlify/functions/api/user/login',{
         method:'POST',
         headers:{
             Accept: 'application/json',
@@ -21,9 +20,12 @@ export const login = async(email,password) => {
             password:password
         })
     })
+    if(res.status!=200){
+        throw new Error(await res.json().msg)
+    }
     // const res = await fetch('https://jsonplaceholder.typicode.com/todos/1')
     const data = await res.json();
-    console.log(data)
+    
     return true
     } catch (error) {
         console.log(error)
@@ -32,9 +34,8 @@ export const login = async(email,password) => {
 }
 
 export const register = async(email,password,phone,name) => {
-    console.log(email,password)
     try {
-        const res = await fetch('http://192.168.0.106:5000/user/register',{
+        const res = await fetch('https://tractrack.netlify.app/.netlify/functions/api/user/register',{
         method:'POST',
         headers:{
             Accept: 'application/json',
@@ -47,9 +48,12 @@ export const register = async(email,password,phone,name) => {
             name
         })
     })
+    if(res.status!=201)
+    {
+        throw new Error(await res.json())
+    }
     // const res = await fetch('https://jsonplaceholder.typicode.com/todos/1')
     const data = await res.json();
-    console.log(data)
     return true
     } catch (error) {
         console.log(error)
