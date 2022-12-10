@@ -9,11 +9,6 @@ const TractorReducer = (state,action) => {
                 tractors:[...action.payload]
             };
         case ADD_TRACTOR:
-            async function quickcall(){
-                const data = [...state?.tractors,action.payload]
-                await AsyncStorage.setItem(TRACTOR_KEY,JSON.stringify(data))
-            }
-            quickcall()
             return {
                 ...state,
                 tractors:[...state.tractors,action.payload]
@@ -24,34 +19,14 @@ const TractorReducer = (state,action) => {
                 current:action.payload  
             };
         case UPDATE_TRACTOR:
-            async function updatecall(){
-                const data = state.tractors.map(tractor => tractor.id === action.payload.id ? {...tractor,name:action.payload.name} : tractor)
-                if(data.length>0){
-                    await AsyncStorage.setItem(TRACTOR_KEY,JSON.stringify(data))
-                }else{
-                    await AsyncStorage.removeItem(TRACTOR_KEY)
-                }
-                
-            }
-          updatecall()
             return{
                 ...state,
-                tractors:state.tractors.map(tractor => tractor.id===action.payload.id ? action.payload : tractor)
+                tractors:state.tractors.map(tractor => tractor._id===action.payload._id ? action.payload : tractor)
             };
         case DELETE_TRACTOR:
-            async function deletecall(){
-                const data = state.tractors.filter(tractor => tractor.id !== action.payload)
-                if(data.length>0){
-                    await AsyncStorage.setItem(TRACTOR_KEY,JSON.stringify(data))
-                }else{
-                    await AsyncStorage.removeItem(TRACTOR_KEY)
-                }
-                
-            }
-           deletecall()
             return{
                 ...state,
-                tractors:state.tractors.filter(tractor => tractor.id !== action.payload)
+                tractors:state.tractors.filter(tractor => tractor._id !== action.payload)
             };
         case CURRENT_TRACTOR:
             return {

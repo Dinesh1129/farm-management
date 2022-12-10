@@ -19,7 +19,7 @@ export const getDrivers = async(dispatch) => {
             return false;
         }
         const data = await res.json()
-        console.log(data)
+
         if(data){
             dispatch({
                 type: ALL_DRIVER,

@@ -30,12 +30,12 @@ const AddEditTractor = ({route}) => {
    useEffect(() => {
     const current = tractorState.current
     if(type=="edit"){
-                setId(current.id)
+                setId(current._id)
                 setName(current.name)
                 setSize(current.size)
                 setModel(current.model)
                 setCompany(current.company)
-                setRegistrationNumber(current.registration)
+                setRegistrationNumber(current.registrationnumber)
                 setColor(current.color)
            }
            else{
@@ -54,12 +54,12 @@ const AddEditTractor = ({route}) => {
         company,
         model,
         size:Size,
-        registration:registrationNumber
+        registrationnumber:registrationNumber
     }
     if(type=="edit"){
         updateTractor(tractor.id,tractor,dispatch)
     }else{
-        addTractor(tractor.id,tractor,dispatch)
+        addTractor(tractor,dispatch)
     }
     clearCurrentTractor(dispatch)
     navigation.goBack()

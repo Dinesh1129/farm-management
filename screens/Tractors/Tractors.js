@@ -1,16 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {View,Text,TouchableOpacity,SafeAreaView,ScrollView} from 'react-native'
 import tw from 'twrnc'
 import MI from 'react-native-vector-icons/dist/MaterialIcons'
 import {useNavigation} from '@react-navigation/native'
 import { getDriver, useDriver } from '../../components/contexts/driver/driverState'
-import { getTractor, useTractor } from '../../components/contexts/Tractors/tractorState'
+import { getTractor, getTractors, useTractor } from '../../components/contexts/Tractors/tractorState'
 import { getPlow, usePlow } from '../../components/contexts/plows/plowState'
-
-
-
-
-
 
 export const RenderView = ({item,location}) => {
     const navigation = useNavigation()
@@ -39,6 +34,9 @@ export const RenderView = ({item,location}) => {
 
 const Tractors = () => {
     const [state,dispatch] = useTractor()
+    useEffect(() => {
+        getTractors(dispatch)
+    },[JSON.stringify(state.tractors)])
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
         <ScrollView style={tw `min-h-screen w-full`}>
