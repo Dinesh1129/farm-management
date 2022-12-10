@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useContext, useReducer } from "react"
 import UserContext from "./userContext"
 import UserReducer from "./userReducer"
@@ -25,6 +26,9 @@ export const login = async(email,password) => {
     }
     // const res = await fetch('https://jsonplaceholder.typicode.com/todos/1')
     const data = await res.json();
+    console.log(data)
+
+    await AsyncStorage.setItem("userid",data._id)
     
     return true
     } catch (error) {

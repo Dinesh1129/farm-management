@@ -22,10 +22,10 @@ const AddEditDriver = ({route}) => {
    useEffect(() => {
     const current = driverstate.current
     if(type=="edit"){
-                setId(current.id)
+                setId(current._id)
                 setName(current.name)
                 setEmail(current.email)
-                setphone(current.phone)
+                setphone(current.phone.toString())
                 setlicense(current.license)
            }
            else{
@@ -47,7 +47,7 @@ const AddEditDriver = ({route}) => {
     if(type=="edit"){
         updateDriver(driver.id,driver,dispatch)
     }else{
-        addDriver(driver.id,driver,dispatch)
+        addDriver(driver,dispatch)
     }
     clearCurrentDriver(dispatch)
     navigation.goBack()

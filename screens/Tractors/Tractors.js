@@ -19,11 +19,11 @@ export const RenderView = ({item,location}) => {
     const [plowstate,plowdispatch] = usePlow()
     const MovetoNext = async() => {
        if(location=="drivers-edit"){
-        await getDriver(item.id,driverdispatch)
+        await getDriver(item._id,driverdispatch)
        }else if(location=="tractors-edit"){
-        await getTractor(item.id,tractordispatch)
+        await getTractor(item._id,tractordispatch)
        }else if(location=="plows-edit"){
-        await getPlow(item.id,plowdispatch)
+        await getPlow(item._id,plowdispatch)
        }
        
         navigation.navigate(location,{type:"edit"})
