@@ -25,9 +25,7 @@ export const login = async(email,password) => {
         throw new Error(await res.json().msg)
     }
     // const res = await fetch('https://jsonplaceholder.typicode.com/todos/1')
-    const data = await res.json();
-    console.log(data)
-
+    const data = await res.json()
     await AsyncStorage.setItem("userid",data._id)
     
     return true

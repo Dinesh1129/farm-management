@@ -19,7 +19,7 @@ const AddEditPlow = ({route}) => {
    useEffect(() => {
     const current = plowState.current
     if(type=="edit"){
-                setId(current.id)
+                setId(current._id)
                 setName(current.name)
                 setType(current.type)
            }
@@ -40,7 +40,7 @@ const AddEditPlow = ({route}) => {
     if(type=="edit"){
         updatePlow(plow.id,plow,dispatch)
     }else{
-        addPlow(plow.id,plow,dispatch)
+        addPlow(plow,dispatch)
     }
     clear_current_Plow(dispatch)
     navigation.goBack()

@@ -8,11 +8,6 @@ const PlowReducer =  (state,action) => {
                 plows:[...action.payload]
             };
         case ADD_PLOW:
-            async function quickcall(){
-                const data = [...state?.plows,action.payload]
-                await AsyncStorage.setItem(PLOW_KEY,JSON.stringify(data))
-            }
-            quickcall()
             return {
                 ...state,
                 plows:[...state.plows,action.payload]
@@ -23,35 +18,14 @@ const PlowReducer =  (state,action) => {
                 current:action.payload
             };
         case UPDATE_PLOW:
-            async function updatecall(){
-                const data = state.plows.map(plow => plow.id === action.payload.id ? {...plow,name:action.payload.name} : plow)
-               
-                if(data.length>0){
-                    await AsyncStorage.setItem(PLOW_KEY,JSON.stringify(data))
-                }else{
-                    await AsyncStorage.removeItem(PLOW_KEY)
-                }
-                
-            }
-          updatecall()
             return {
                 ...state,
-                plows:state.plows.map(plow => plow.id===action.payload.id ? action.payload : plow)
+                plows:state.plows.map(plow => plow._id===action.payload._id ? action.payload : plow)
             };
         case DELETE_PLOW:
-            async function deletecall(){
-                const data = state.plows.filter(plow => plow.id !== action.payload)
-                if(data.length>0){
-                    await AsyncStorage.setItem(PLOW_KEY,JSON.stringify(data))
-                }else{
-                    await AsyncStorage.removeItem(PLOW_KEY)
-                }
-                
-            }
-           deletecall()
             return{
                 ...state,
-                plows:state.plows.filter(plow => plow.id !== action.payload)
+                plows:state.plows.filter(plow => plow._id !== action.payload)
             };
         case CURRENT_PLOW:
             return {
