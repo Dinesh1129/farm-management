@@ -10,7 +10,7 @@ const Plows = () => {
   const [state,dispatch] = usePlow()
   useEffect(() => {
     getPlows(dispatch)
-  },[]) 
+  },[JSON.stringify(state.plows)]) 
  
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>

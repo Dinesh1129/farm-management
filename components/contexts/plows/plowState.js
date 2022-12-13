@@ -12,24 +12,30 @@ export const usePlow = () => {
 
 export const getPlows = async(dispatch) => {
     try {
-        const json = await AsyncStorage.getItem(PLOW_KEY)
-        
-        if(json){
-            const data = JSON.parse(json)
-            dispatch({
-                type: ALL_PLOW,
-                payload:data
-            })
+        const userid = await AsyncStorage.getItem("userid")
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/plows/user/${userid}`)
+        if(res.status!=200){
+            return false
         }
+        const data = await res.json()
+            
+        dispatch({
+            type: ALL_PLOW,
+            payload:data
+        })
+        
     } catch (error) {
         console.log('error in getplows ---------',error)
     }
 }
 
-export const getPlow = async(key,dispatch) => {
+export const getPlow = async(id,dispatch) => {
     try {
-        const json = await AsyncStorage.getItem(key)
-        const data = JSON.parse(json)
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/plows/${id}`)
+        if(res.status!=200){
+            return false
+        }
+        const data = await res.json()
         
         dispatch({
             type:GET_PLOW,
@@ -40,15 +46,24 @@ export const getPlow = async(key,dispatch) => {
     }
 }
 
-export const addPlow = async(key,plow,dispatch) => {
+export const addPlow = async(plow,dispatch) => {
     try {
-        const json = JSON.stringify(plow)
-        await AsyncStorage.setItem(key,json)
-       
-        const data = {
-            id:plow.id,
-            name:plow.name
+        const userid = await AsyncStorage.getItem("userid")
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/plows/add`,{
+            method:"POST",
+            headers:{
+                'Content-Type':"application/json"
+            },
+            body:JSON.stringify({
+                ...plow,
+                userid
+            })
+        })
+        
+        if(res.status!=201){
+            return false
         }
+        const data = await res.json()
         dispatch({
             type: ADD_PLOW,
             payload:data
@@ -58,25 +73,44 @@ export const addPlow = async(key,plow,dispatch) => {
     }
 }
 
-export const updatePlow = async (key,plow,dispatch) => {
+export const updatePlow = async (id,plow,dispatch) => {
     try {
-        const json = JSON.stringify(plow)
-        await AsyncStorage.setItem(key,json)
+       const userid = await AsyncStorage.getItem("userid")
+       const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/plows/${id}`,{
+        method:"PUT",
+        headers:{
+            'Content-Type':"application/json"
+        },
+        body:JSON.stringify({
+            ...plow,
+            userid
+        })
+       })
+       if(res.status!=201){
+            return false
+       }
+       const data = await res.json()
         dispatch({
             type:UPDATE_PLOW,
-            payload:plow
+            payload:data
         })
     } catch (error) {
         console.log('error in update plow -----------------',error)
     }
 }
 
-export const deletePlow = async (key,dispatch) => {
+export const deletePlow = async (id,dispatch) => {
     try {
-        await AsyncStorage.removeItem(key)
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/plows/${id}`,{
+            method: "DELETE"
+        })
+        if(res.status!=200){
+            return false
+        }
+        const data = await res.json()
         dispatch({
             type:DELETE_PLOW,
-            payload:key
+            payload:data._id
         })
     } catch (error) {
         console.log('error in delete plow ---------------',error)
