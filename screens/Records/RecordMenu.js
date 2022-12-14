@@ -1,4 +1,4 @@
-import React,{useLayoutEffect} from 'react'
+import React,{useLayoutEffect, useMemo} from 'react'
 import {View,ScrollView,SafeAreaView,Text,TouchableOpacity} from 'react-native'
 import tw from 'twrnc'
 import MI from 'react-native-vector-icons/dist/MaterialIcons'
@@ -11,19 +11,27 @@ export const RecordRender = ({record}) => {
   const navigation = useNavigation()
   const [state,dispatch] = useRecord()
   const addType = async () => {
-    await getRecord(record.id,dispatch)
+    await getRecord(record._id,dispatch)
     navigation.navigate('record-add',{type:"edit"})
   }
-
+  const workTime = useMemo((hrs=record.totalhr,mins=record.totalmin) => {
+    if(hrs==0){
+     return `${mins} mins`
+    }
+    if(mins==0){
+     return `${hrs} hr`
+    }
+    return `${hrs} hr : ${mins} mins`
+   },[JSON.stringify(record)])
   
   return (
     <TouchableOpacity style={tw `mt-1 w-full h-max py-2 px-1 flex flex-row justify-between border`} onPress={() => addType()}>
       <View style={tw `flex flex-col h-full w-11/12`}>
           <Text style={tw `font-semibold text-md`}>{record.date? `${new Date(record.date).toDateString()}` : ''}</Text>
-          <Text style={tw `font-semibold text-md`}>{record.totaltime}</Text>
-          <Text style={tw `font-semibold text-md`}>{record.farmname? record.farmname : ''}</Text>
+          <Text style={tw `font-semibold text-md`}>{workTime}</Text>
+          <Text style={tw `font-semibold text-md`}>{record.place? record.place : ''}</Text>
           <Text style={tw `font-semibold text-md`}>{record.farmer? record.farmer : ''}</Text>
-          <Text style={tw `font-semibold text-md`}>{record.drivername? record.drivername : ''}</Text>
+          <Text style={tw `font-semibold text-md`}>{record.driver? record.driver : ''}</Text>
       </View>
     <MI name={'edit'} size={25} color={'black'}/>
 </TouchableOpacity>
