@@ -9,11 +9,6 @@ export default (state,action) => {
                 records:[...action.payload]
             };
         case ADD_RECORD:
-            async function quickcall(){
-                const data = [...state?.records,action.payload]
-                await AsyncStorage.setItem(RECORD_KEY,JSON.stringify(data))
-            }
-            quickcall()
             return {
                 ...state,
                 records:[...state.records,action.payload]
@@ -24,35 +19,14 @@ export default (state,action) => {
                 current:action.payload  
             };
         case UPDATE_RECORD:
-            async function updatecall(){
-                const data = state.records.map(record => record.id === action.payload.id ? {...record,drivername:action.payload.drivername,farmer:action.payload.farmer,farmname:action.payload.place,date:action.payload.date,totaltime:action.payload.totaltime} : record)
-                
-                if(data.length>0){
-                    await AsyncStorage.setItem(RECORD_KEY,JSON.stringify(data))
-                }else{
-                    await AsyncStorage.removeItem(RECORD_KEY)
-                }
-                
-            }
-            updatecall()
             return{
                 ...state,
-                records:state.records.map(record => record.id===action.payload.id ? action.payload : record)
+                records:state.records.map(record => record._id===action.payload._id ? action.payload : record)
             };
         case DELETE_RECORD:
-            async function deletecall(){
-                const data = state.records.filter(record => record.id !== action.payload)
-                if(data.length>0){
-                    await AsyncStorage.setItem(RECORD_KEY,JSON.stringify(data))
-                }else{
-                    await AsyncStorage.removeItem(RECORD_KEY)
-                }
-                
-            }
-            deletecall()
             return{
                 ...state,
-                records:state.records.filter(record => record.id !== action.payload)
+                records:state.records.filter(record => record._id !== action.payload)
             };
         case CURRENT_RECORD:
             return {

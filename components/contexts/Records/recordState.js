@@ -11,26 +11,29 @@ export const useRecord = () => {
 
 export const getRecords = async(dispatch) => {
     try {
-        const json = await AsyncStorage.getItem(RECORD_KEY)
-        if(json){
-            const data = JSON.parse(json)
-            dispatch({
-                type: ALL_RECORD,
-                payload:data
-            })
+        const userid = await AsyncStorage.getItem("userid")
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/records/user/${userid}`)
+        if(res.status!=200){
+            throw await res.json()
         }
-        
-        
-        
+        const data = await res.json()
+        dispatch({
+            type: ALL_RECORD,
+            payload:data
+        })
+            
     } catch (error) {
         console.log(error,'error in gets records')
     }
 }
 
-export const getRecord = async(key,dispatch) => {
+export const getRecord = async(id,dispatch) => {
     try {
-       const json= await AsyncStorage.getItem(key)
-       const data = JSON.parse(json)
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/records/${id}`)
+       if(res.status!=200){
+        throw await res.json()
+       }
+       const data = await res.json()
         dispatch({
             type:GET_RECORD,
             payload:data
@@ -40,19 +43,24 @@ export const getRecord = async(key,dispatch) => {
     }
 }
 
-export const addRecord = async (key,record,dispatch) => {
+export const addRecord = async (record,dispatch) => {
     try {
-        const json = JSON.stringify(record)
-        await AsyncStorage.setItem(key,json)
-        const data = {
-            id:record.id,
-            drivername:record.drivername,
-            farmname:record.place,
-            date:record.date,
-             totaltime:record.totaltime,
-             farmer:record.farmer
-        }
+        const userid = await AsyncStorage.getItem("userid")
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/records/add`,{
+            method:"POST",
+            headers:{
+                'Content-Type':"application/json"
+            },
+            body:JSON.stringify({
+                ...record,
+                userid
+            })
+        })
         
+       if(res.status!=201){
+        throw await res.json()
+       }
+        const data = await res.json()
         dispatch({
             type:ADD_RECORD,
             payload:data
@@ -62,25 +70,44 @@ export const addRecord = async (key,record,dispatch) => {
     }
 }
 
-export const updateRecord = async (key,record,dispatch)=>{
+export const updateRecord = async (id,record,dispatch)=>{
     try {
-        const json = JSON.stringify(record)
-        await AsyncStorage.setItem(key,json)
+        const userid = await AsyncStorage.getItem("userid")
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/records/${id}`,{
+            method: "PUT",
+            headers:{
+                'Content-Type': "application/json"
+            },
+            body:JSON.stringify({
+                ...record,
+                userid
+            })
+        })
+        if(res.status!=201){
+            throw await res.json()
+        }
+        const data = await res.json()
         dispatch({
             type:UPDATE_RECORD,
-            payload:record
+            payload:data
         })
     } catch (error) {
         console.log(error,'error in update record----------')
     }
 }
 
-export const deleteRecord = async (key,dispatch) => {
+export const deleteRecord = async (id,dispatch) => {
     try {
-        await AsyncStorage.removeItem(key)
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/records/${id}`,{
+            method: "DELETE"
+        })
+        if(res.status!=200){
+            throw await res.json()
+        }
+        const data = await res.json()
         dispatch({
             type:DELETE_RECORD,
-            payload:key
+            payload: data._id
         })
     } catch (error) {
         console.log(error,'error in delete record----------')

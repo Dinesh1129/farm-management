@@ -23,7 +23,7 @@ const SearchRecordMenu = () => {
     
     const searches =() => {
     
-      const search = state.records?.filter(record => record.farmname.toLowerCase().includes(searchvalue.toLowerCase()))
+      const search = state.records?.filter(record => record.place.toLowerCase().includes(searchvalue.toLowerCase()))
       setSearches(search)
       
     }

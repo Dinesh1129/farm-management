@@ -73,15 +73,15 @@ const AddEditRecord = ({route}) => {
         if(type=='edit'){
             const current = recordstate.current
             
-            setId(current.id)
+            setId(current._id)
             setPlace(current.place)
-            setDriver(current.drivername)
+            setDriver(current.driver)
             setTractor(current.tractor)
             setPlow(current.plow)
             setDate(new Date(current.date))
-            setTotalhr(parseInt(current.totalHr))
-            setTotalmins(parseInt(current.totalmins))
-            setHourrate(current.hourRate)
+            setTotalhr(parseInt(current.totalhr))
+            setTotalmins(parseInt(current.totalmin))
+            setHourrate(current.hourlyrate)
             setFarmer(current.farmer)
         }
     },[])
@@ -105,24 +105,23 @@ const AddEditRecord = ({route}) => {
         const data = {
             id,
             place,
-            drivername:driver,
+            driver:driver,
             tractor,
             plow,
             date:date,
-            totaltime:workTime(totalhr,totalmins).toString(),
-            totalHr:totalhr.toString(),
-            totalmins:totalmins.toString(),
-            hourRate,
+            totalhr:totalhr,
+            totalmin:totalmins,
+            hourlyrate:hourRate,
             totalamount,
             farmer
         }
        
-       
+    //    console.log(data)
         if(type=="edit"){
             
             updateRecord(data.id,data,recordDispatch)
         }else{
-            addRecord(data.id,data,recordDispatch)
+            addRecord(data,recordDispatch)
         }
         clearCurrentRecord(recordDispatch)
         navigation.goBack()
@@ -135,7 +134,7 @@ const AddEditRecord = ({route}) => {
    }
 
    const totalamount = useMemo(() => {
-    return ((totalhr*hourRate)+((totalmins/60)*hourRate)).toFixed(2)
+    return ((totalhr*hourRate)+((totalmins/60)*hourRate)).toFixed(0)
    },[totalhr,totalmins,hourRate])
 
   return (
