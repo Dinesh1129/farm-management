@@ -21,9 +21,9 @@ export const getRecords = async(dispatch) => {
             type: ALL_RECORD,
             payload:data
         })
-            
+        return {status:"success"}
     } catch (error) {
-        console.log(error,'error in gets records')
+        return {status:"fail",msg:error?.msg}
     }
 }
 
@@ -38,8 +38,9 @@ export const getRecord = async(id,dispatch) => {
             type:GET_RECORD,
             payload:data
         })
+        return {status:"success"}
     } catch (error) {
-        console.log(error,'error in get record----------')
+        return {status:"fail",msg:error?.msg}
     }
 }
 
@@ -65,8 +66,9 @@ export const addRecord = async (record,dispatch) => {
             type:ADD_RECORD,
             payload:data
         })
+        return {status:"success",msg:"Added Successfully"}
     } catch (error) {
-        console.log(error,'error in add record----------')
+        return {status:"fail",msg:error.msg}
     }
 }
 
@@ -91,8 +93,9 @@ export const updateRecord = async (id,record,dispatch)=>{
             type:UPDATE_RECORD,
             payload:data
         })
+        return {status:"success",msg:"Updated Successfully"}
     } catch (error) {
-        console.log(error,'error in update record----------')
+        return {status:"fail",msg:error.msg}
     }
 }
 
@@ -109,8 +112,9 @@ export const deleteRecord = async (id,dispatch) => {
             type:DELETE_RECORD,
             payload: data._id
         })
+        return {status:"success",msg:"Deleted Successfully"}
     } catch (error) {
-        console.log(error,'error in delete record----------')
+        return {status:"fail",msg:error?.msg}
     }
 }
 

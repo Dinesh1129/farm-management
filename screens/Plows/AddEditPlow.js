@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import {View,Text,TouchableOpacity,SafeAreaView,FlatList,Button,ScrollView,ToastAndroid} from 'react-native'
+import {View,Text,TouchableOpacity,SafeAreaView,FlatList,Button,ScrollView,ToastAndroid,ActivityIndicator,Alert} from 'react-native'
 import tw from 'twrnc'
 import { MyButton } from '../Tractors/AddEditTractor'
 import {TextInput} from 'react-native-paper'
@@ -13,6 +13,7 @@ const AddEditPlow = ({route}) => {
     const [id,setId] = useState("")
     const [Name,setName] = useState("")
     const [Type,setType] = useState("")
+    const [loading,setloading] = useState(false)
     
    var type = route.params?.type
 
@@ -27,7 +28,7 @@ const AddEditPlow = ({route}) => {
             setId(uuid.v4())
            }
    },[])
-   const OnSubmit = () => {
+   const OnSubmit = async () => {
     if(Name.trim() === "" || Type.trim()=== ""){
         ToastAndroid.show("Please fill required fields",ToastAndroid.SHORT)
         return
@@ -37,19 +38,60 @@ const AddEditPlow = ({route}) => {
         name:Name,
         type:Type
     }
+    setloading(true)
+    let res
     if(type=="edit"){
-        updatePlow(plow.id,plow,dispatch)
+       res= await updatePlow(plow.id,plow,dispatch)
     }else{
-        addPlow(plow,dispatch)
+      res=await addPlow(plow,dispatch)
     }
-    clear_current_Plow(dispatch)
-    navigation.goBack()
-   }
-
-   const OnDelete = () => {
-        deletePlow(id,dispatch)
+    if(res.status=="success"){
+        ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+        setloading(false)
         clear_current_Plow(dispatch)
         navigation.goBack()
+    }else{
+        setloading(false)
+        ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+    }
+    
+   }
+
+   const deleteConfirmation = async () => {
+    let res
+    Alert.alert(
+        "Delete Confirmation",
+        `Are You sure,${Name} will permanently deleted ?`,
+        [
+            {
+                text:"Cancel",
+                style:"cancel",
+                onPress:() => {}
+            },
+            {
+                text:"Delete",
+                style:"destructive",
+                onPress:async() =>{
+                    setloading(true)
+                    res = await deletePlow(id,dispatch)
+                    setloading(false)
+                    if(res.status=="success"){
+                        ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+                        clear_current_Plow(dispatch)
+                        navigation.goBack()
+                    }
+                    else{
+                        ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+                    }
+                }
+            }
+        ]
+    )
+    
+}
+
+   const OnDelete = async() => {
+        await deleteConfirmation()
    }
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
@@ -79,6 +121,7 @@ const AddEditPlow = ({route}) => {
                     />
                     <MyButton cb={OnSubmit} value={type=="edit"? "Update" : "Add"}/>
                     {type=="edit" && <MyButton cb={OnDelete} value="Delete"/>}
+                    <ActivityIndicator animating={loading} size="large" />
                 </View>
             </View>
         </ScrollView>

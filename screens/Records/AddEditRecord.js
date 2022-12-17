@@ -1,5 +1,5 @@
 import React,{useEffect, useMemo, useState} from 'react'
-import {View,SafeAreaView,ScrollView,ToastAndroid} from 'react-native'
+import {View,SafeAreaView,ScrollView,ToastAndroid,ActivityIndicator,Alert} from 'react-native'
 import tw from 'twrnc'
 import {TextInput} from 'react-native-paper'
 import DropDown from 'react-native-paper-dropdown'
@@ -58,6 +58,7 @@ const AddEditRecord = ({route}) => {
 
     // new Date().toDateString()
     const [modalvisible,setModalVisible] = useState(false)
+    const [loading,setloading] = useState(false)
 
     useEffect(() => {
         const drivers = driverstate.drivers.map(val => ({value:val.name,label:val.name}))
@@ -96,7 +97,7 @@ const AddEditRecord = ({route}) => {
         return `${hrs} hr : ${mins} mins`
        }
 
-    const onSubmit = () => {
+    const onSubmit = async() => {
         if(farmer.trim() === "" || driver.trim()==="" || tractor.trim()==="" || date===null || (totalhr==0 && totalmins==0) || hourRate==0){
             ToastAndroid.show("Please fill required fields",ToastAndroid.SHORT)
             return
@@ -115,22 +116,62 @@ const AddEditRecord = ({route}) => {
             totalamount,
             farmer
         }
-       
+        setloading(true)
+       let res
     //    console.log(data)
         if(type=="edit"){
             
-            updateRecord(data.id,data,recordDispatch)
+           res = await updateRecord(data.id,data,recordDispatch)
         }else{
-            addRecord(data,recordDispatch)
+           res = await addRecord(data,recordDispatch)
         }
-        clearCurrentRecord(recordDispatch)
-        navigation.goBack()
+        if(res.status=="success"){
+            ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+            setloading(false)
+            clearCurrentRecord(recordDispatch)
+            navigation.goBack()
+        }else{
+            ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+            setloading(false)
+        }
+        
     }
 
-    const OnDelete = () => {
-        deleteRecord(id,recordDispatch)
-        clearCurrentRecord(recordDispatch)
-        navigation.goBack()
+    const deleteConfirmation = async () => {
+        let res
+        Alert.alert(
+            "Delete Confirmation",
+            "Are You sure,this record will permanently deleted ?",
+            [
+                {
+                    text:"Cancel",
+                    style:"cancel",
+                    onPress:() => {}
+                },
+                {
+                    text:"Delete",
+                    style:"destructive",
+                    onPress:async() =>{
+                        setloading(true)
+                        res = await deleteRecord(id,recordDispatch)
+                        setloading(false)
+                        if(res.status=="success"){
+                            ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+                            clearCurrentRecord(recordDispatch)
+                            navigation.goBack()
+                        }
+                        else{
+                            ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+                        }
+                    }
+                }
+            ]
+        )
+        
+    }
+
+    const OnDelete = async() => {
+        await deleteConfirmation()    
    }
 
    const totalamount = useMemo(() => {
@@ -245,7 +286,7 @@ const AddEditRecord = ({route}) => {
             {type=="edit" && <MyButton cb={OnDelete} value="DELETE"/>}
             
                 <DatePick modalVisible={modalvisible} setDate={setDate} setModalVisible={setModalVisible}/>
-        
+                <ActivityIndicator animating={loading} size="large" />
             </View>
         </ScrollView>
     </SafeAreaView>

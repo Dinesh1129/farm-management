@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {View,Text,TouchableOpacity,SafeAreaView,TextInput, ToastAndroid} from 'react-native'
+import {View,Text,TouchableOpacity,SafeAreaView,TextInput, ToastAndroid,ActivityIndicator} from 'react-native'
 import tw from 'twrnc'
 import { MyButton } from '../Tractors/AddEditTractor'
 import {useNavigation} from '@react-navigation/native'
@@ -12,6 +12,7 @@ const Registration = () => {
     const [phone,setPhone] = useState('')
     const [name,setName] = useState('')
     const [confpass,setConfpass] = useState('')
+    const [loading,setloading] = useState(false)
     const onRegister = async() => {
         if(email.trim()==='' || password.trim()==='' || phone.trim()==='' || name.trim()==='')
         {
@@ -23,10 +24,14 @@ const Registration = () => {
             ToastAndroid.show('Please check password',ToastAndroid.SHORT)
             return
         }
+        setloading(true)
         const res = await register(email,password,phone,name)
-        if(res)
+        if(res.status=="success")
       {
+        setloading(false)
         navigation.navigate('menu')
+      }else{
+        ToastAndroid.show(res.msg,ToastAndroid.SHORT)
       }
     }
   return (
@@ -60,16 +65,18 @@ const Registration = () => {
                     onChangeText={setPhone}
                 />
                 
-                <TextInput 
-                    keyboardType='visible-password'
+                <TextInput
+                    secureTextEntry={true} 
+                    keyboardType='default'
                     placeholder='Password'
                     placeholderTextColor={'#9ca3af'}
                     style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
                     value={password}
                     onChangeText={setPassword}
                 />
-                <TextInput 
-                    keyboardType='visible-password'
+                <TextInput
+                    secureTextEntry={true}
+                    keyboardType='default'
                     placeholder='Confirm Password'
                     placeholderTextColor={'#9ca3af'}
                     style={tw `mt-4 pl-2 h-[50px] w-full border border-black outline-none rounded-lg`}
@@ -77,6 +84,7 @@ const Registration = () => {
                     onChangeText={setConfpass}
                 />
                 <MyButton value='Sign Up' cb={() => onRegister()}/>
+                <ActivityIndicator animating={false} size="large" />
             </View>
             <TouchableOpacity style={tw `mt-2`} onPress={() => navigation.navigate('login')}>
                 <Text style={tw `text-[#2563eb] font-semibold text-lg`}>Already have an Account?</Text>

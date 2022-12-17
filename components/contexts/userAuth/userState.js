@@ -22,15 +22,16 @@ export const login = async(email,password) => {
         })
     })
     if(res.status!=200){
-        throw new Error(await res.json().msg)
+        throw await res.json()
     }
     // const res = await fetch('https://jsonplaceholder.typicode.com/todos/1')
     const data = await res.json()
     await AsyncStorage.setItem("userid",data._id)
     
-    return true
+    return {status:"success",msg:"Login Success"}
     } catch (error) {
-        console.log(error)
+        // console.log(error)
+        return {status:"fail",msg:error?.msg}
         return false
     }
 }
@@ -52,14 +53,15 @@ export const register = async(email,password,phone,name) => {
     })
     if(res.status!=201)
     {
-        throw new Error(await res.json())
+        throw await res.json()
     }
     // const res = await fetch('https://jsonplaceholder.typicode.com/todos/1')
     const data = await res.json();
-    return true
+    await AsyncStorage.setItem("userid",data._id)
+    return {status:"success",msg:"regsitration success"}
     } catch (error) {
-        console.log(error)
-        return false
+        
+        return {status:"fail",msg:error?.msg}
     }
 }
 
