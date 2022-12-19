@@ -23,9 +23,9 @@ export const getPlows = async(dispatch) => {
             type: ALL_PLOW,
             payload:data
         })
-        
+        return {status:"success"}
     } catch (error) {
-        console.log('error in getplows ---------',error)
+        return {status:"fail",msg:error.msg}
     }
 }
 
@@ -41,8 +41,9 @@ export const getPlow = async(id,dispatch) => {
             type:GET_PLOW,
             payload:data
         })
+        return {status:"success"}
     } catch (error) {
-        console.log('error in get plow ----------------',error)
+        return {status:"fail",msg:error.msg}
     }
 }
 
@@ -61,15 +62,16 @@ export const addPlow = async(plow,dispatch) => {
         })
         
         if(res.status!=201){
-            return false
+            throw await res.json()
         }
         const data = await res.json()
         dispatch({
             type: ADD_PLOW,
             payload:data
         })
+        return {status:"success",msg:"Added Successfully"}
     } catch (error) {
-        console.log('error in add plow ----------',error)
+        return {status:"success",msg:error.msg}
     }
 }
 
@@ -87,15 +89,16 @@ export const updatePlow = async (id,plow,dispatch) => {
         })
        })
        if(res.status!=201){
-            return false
+            throw await res.json()
        }
        const data = await res.json()
         dispatch({
             type:UPDATE_PLOW,
             payload:data
         })
+        return {status:"success",msg:"Updated Successfully"}
     } catch (error) {
-        console.log('error in update plow -----------------',error)
+        return {status:"fail",msg:error.msg}
     }
 }
 
@@ -105,15 +108,16 @@ export const deletePlow = async (id,dispatch) => {
             method: "DELETE"
         })
         if(res.status!=200){
-            return false
+            throw await res.json()
         }
         const data = await res.json()
         dispatch({
             type:DELETE_PLOW,
             payload:data._id
         })
+        return {status:"success",msg:"Deleted Successfully"}
     } catch (error) {
-        console.log('error in delete plow ---------------',error)
+        return {status:"fail",msg:error.msg}
     }
 }
 
