@@ -21,6 +21,7 @@ import AddEditRecord from './screens/Records/AddEditRecord'
 import { Provider as PaperProvider } from 'react-native-paper';
 import RecordState from './components/contexts/Records/recordState'
 import SearchRecordMenu from './screens/SearchRecords/SearchRecordMenu'
+import FilterRecord from './screens/SearchRecords/FilterRecord'
 
 const Stack = createNativeStackNavigator()
 
@@ -102,7 +103,7 @@ const App = () => {
                   headerShown:true
                 }}/>
                 <Stack.Screen name='records-menu' component={RecordMenu} options={{
-                  header:({route}) => <Header name={"Records"} location={'record-add'}/>,
+                  header:({route}) => <HeaderSimple name={"Records"} />,
                   headerShown:true
                 }}/>
                 <Stack.Screen name='record-add' component={AddEditRecord} options={{
@@ -111,6 +112,10 @@ const App = () => {
                 }}/>
                  <Stack.Screen name='search-record' component={SearchRecordMenu} options={{
                   header:({route}) => <HeaderSimple name={"Search Record"}/>,
+                  headerShown:true
+                }}/>
+                <Stack.Screen name='filter-record' component={FilterRecord} options={{
+                  header:({route}) => <HeaderSimple name={"Filter Record"}/>,
                   headerShown:true
                 }}/>
                 {/* Checking fork to start development */}
