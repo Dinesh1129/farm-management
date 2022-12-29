@@ -1,5 +1,5 @@
 import React,{useLayoutEffect, useMemo} from 'react'
-import {View,ScrollView,SafeAreaView,Text,TouchableOpacity} from 'react-native'
+import {View,ScrollView,SafeAreaView,Text,TouchableOpacity,useWindowDimensions} from 'react-native'
 import tw from 'twrnc'
 import MI from 'react-native-vector-icons/dist/MaterialIcons'
 import {useNavigation} from '@react-navigation/native'
@@ -40,19 +40,25 @@ export const RecordRender = ({record}) => {
 
 const RecordMenu = () => {
   const [state,dispatch] = useRecord()
-
+  const {height} = useWindowDimensions()
+  const navigation = useNavigation()
  
 
   useLayoutEffect(() => {
-    getRecords(dispatch)
-  },[JSON.stringify(state.records)])
+    getRecords(dispatch,1)
+  },[])
   
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
         <ScrollView style={tw `min-h-screen w-full`}>
-        <View style={tw `h-full w-full p-2`}>
-                
-                {state.records.map(val => <RecordRender key={val.id} record={val}/>)}
+        <View style={tw `h-[${height-80}px] w-full p-2 flex flex-col justify-center items-center`}>
+                <TouchableOpacity style={tw `px-3 py-5 rounded-md bg-[#facc15] w-10/12`} onPress={() => navigation.navigate('record-add')}>
+                    <Text style={tw `font-bold text-md text-center`}>Add Record</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={tw `px-3 py-5 rounded-md bg-[#facc15] w-10/12 mt-5`} onPress={() => navigation.navigate('search-record')}>
+                    <Text style={tw `font-bold text-md text-center`}>Search Records</Text>
+                </TouchableOpacity>
+                {/* {state.records.map(val => <RecordRender key={val.id} record={val}/>)} */}
             </View>
         </ScrollView>
     </SafeAreaView>

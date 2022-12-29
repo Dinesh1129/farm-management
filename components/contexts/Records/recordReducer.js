@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { ADD_RECORD, ALL_RECORD, CLEAR_CURRENT_RECORD, CURRENT_RECORD, DELETE_RECORD, GET_RECORD, RECORD_KEY, UPDATE_RECORD } from "../types"
+import { ADD_RECORD, ALL_RECORD, CLEAR_CURRENT_RECORD, CURRENT_RECORD, DELETE_RECORD, FILTER_RECORD, GET_RECORD, RECORD_KEY, UPDATE_RECORD,APPEND_FILTER_RECORD, APPEND_ALL_RECORD, CLEAR_FILTERED_RECORD } from "../types"
 
 export default (state,action) => {
     switch(action.type){
@@ -7,6 +7,21 @@ export default (state,action) => {
             return {
                 ...state,
                 records:[...action.payload]
+            };
+        case APPEND_ALL_RECORD:
+            return{
+                ...state,
+                records:[...state.records,...action.payload]
+            }
+        case FILTER_RECORD:
+            return {
+                ...state,
+                filtered:action.payload
+            };
+        case APPEND_FILTER_RECORD:
+            return {
+                ...state,
+                filtered:[...state.records,...action.payload]
             };
         case ADD_RECORD:
             return {
@@ -38,6 +53,11 @@ export default (state,action) => {
                 ...state,
                 current:null
             };
+        case CLEAR_FILTERED_RECORD:
+            return {
+                ...state,
+                filtered:[]
+            }
         default:
             throw new Error('unspported type')
     }
