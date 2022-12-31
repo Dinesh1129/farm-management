@@ -43,7 +43,7 @@ const SearchRecordMenu = ({route}) => {
     const [searchvalue,setsearchvalue] = useState('')
     const [state,dispatch] = useRecord()
     const navigation = useNavigation()
-    const [start,setStart] = useState(1)
+    const [start,setStart] = useState(0)
     const [loading,setloading] = useState(false)
     const [clearfilter,setclearFilter] = useState(false)
     const [show,setShow] = useState(true)
@@ -53,14 +53,20 @@ const SearchRecordMenu = ({route}) => {
     if(route.params?.search){
       setclearFilter(true)
     }
+    setStart(0)
     setShow(true)
    },[JSON.stringify(route.params)])
+
+   useEffect(() => {
+    getRecords(dispatch);
+    clearFilteredRecord(dispatch)
+   },[])
 
    
 
     const worktime = useMemo(() => {
-      const hr = state.filtered.reduce((prev,record) => prev+=record.totalhr,0)
-      const min = state.filtered.reduce((prev,record) => prev+=record.totalmin,0)
+      let hr = state.filtered.reduce((prev,record) => prev+=record.totalhr,0)
+      let min = state.filtered.reduce((prev,record) => prev+=record.totalmin,0)
      
       if(hr==0){
         return `${min} mins`
@@ -68,6 +74,9 @@ const SearchRecordMenu = ({route}) => {
        if(min==0){
         return `${hr} hr`
        }
+       hr+=min/60;
+       min%=60;
+       hr=parseInt(hr)
        return `${hr} hr : ${min} mins`
        
     },[JSON.stringify(state.filtered)])
@@ -86,7 +95,7 @@ const SearchRecordMenu = ({route}) => {
       {
         let res
         setloading(true)
-        res = await filterRecord(route.params.driver,route.params.tractor,route.params.plow,Start,dispatch)
+        res = await filterRecord(route.params.driver,route.params.fromdate,route.params.todate,Start,dispatch)
         if(res.status=="empty")
         {
             setloading(false)
@@ -128,10 +137,22 @@ const SearchRecordMenu = ({route}) => {
       }
       let result=state.filtered?.filter(record => record.place.toLowerCase().includes(searchvalue.toLowerCase()) || record.farmer.toLowerCase().includes(searchvalue.toLowerCase()))
       setSearches(result)
+      if(result.length>5){
+        setShow(true)
+      }
 
     }
 
+    const filterScreen = () => {
+      if(route.params?.search){
+        navigation.navigate('filter-record',{isfiltered:true,driver:route.params.driver,fromdate:route.params.fromdate,todate:route.params.todate})
+        return
+      }
+      navigation.navigate('filter-record')
+    }
+
     const onClearSearch = () => {
+        setsearchvalue("")
         setSearches([])
     }
 
@@ -149,13 +170,13 @@ const SearchRecordMenu = ({route}) => {
                       onChangeText={setsearchvalue}
                       returnKeyType={'search'}
                       onSubmitEditing={() => {onSearch()}}
+                      clearIcon={() => <TouchableOpacity onPress={() => onClearSearch()}><MI name={'close'} size={25} color={'black'}/></TouchableOpacity>}
                       style={tw `my-2 w-9/12`}
                     />
-                  <TouchableOpacity style={tw`ml-1 w-3/12 py-3.5 rounded-md bg-[#3b82f6]`} onPress={() => navigation.navigate('filter-record')}>
+                  <TouchableOpacity style={tw`ml-1 w-3/12 py-3.5 rounded-md bg-[#3b82f6]`} onPress={() => filterScreen()}>
                     <Text style={tw `text-center text-white text-lg font-bold`}>Filter</Text>
                   </TouchableOpacity>
               </View>
-              {searchvalue.length>0 && <TouchableOpacity style={tw`h-max my-1 w-max p-2 bg-[#5203fc] text-sm font-normal text-capitalize`} onPress={() => {onClearSearch()}}><Text style={tw`text-[#f7f7f7] text-center`}>Clear Searches</Text></TouchableOpacity>}
               {state.filtered.length>0 && <TouchableOpacity style={tw`h-max w-max p-2 bg-[#5203fc] text-sm font-normal text-capitalize`} onPress={() => { onClearFilter() }}><Text style={tw`text-[#f7f7f7] text-center`}>Clear Filter</Text></TouchableOpacity>}
               {state.filtered.length > 0 && <View style={tw `my-2 p-1 border-1 flex flex-col items-center`}>
                 <View style={tw`flex flex-row items-center`}>
