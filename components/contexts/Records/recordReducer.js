@@ -26,7 +26,7 @@ export default (state,action) => {
         case ADD_RECORD:
             return {
                 ...state,
-                records:[...state.records,action.payload]
+                records:[action.payload,...state.records]
             };
         case GET_RECORD:
             return {

@@ -9,7 +9,7 @@ export const useRecord = () => {
     return [state,dispatch]
 }
 
-export const getRecords = async(dispatch,start=1) => {
+export const getRecords = async(dispatch,start=0) => {
     try {
         const userid = await AsyncStorage.getItem("userid")
         const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/records/user/${userid}?start=${start}`)
@@ -130,7 +130,7 @@ export const deleteRecord = async (id,dispatch) => {
     }
 }
 
-export const filterRecord = async (driver,tractor,plow,start,dispatch) => {
+export const filterRecord = async (driver,fromdate,todate,start,dispatch) => {
     try {
         const userid = await AsyncStorage.getItem("userid")
         const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/records/user/${userid}/filter?start=${start}`,{
@@ -141,8 +141,8 @@ export const filterRecord = async (driver,tractor,plow,start,dispatch) => {
             body:JSON.stringify({
                 userid,
                 driver,
-                tractor,
-                plow
+                fromdate,
+                todate
             })
         })
         if(res.status!=200){
@@ -152,7 +152,7 @@ export const filterRecord = async (driver,tractor,plow,start,dispatch) => {
         if(data.length==0){
             return {status:"empty",msg:"No data"}
         }
-        if(start==1)
+        if(start==0)
         {
             dispatch({
                 type: FILTER_RECORD,

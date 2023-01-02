@@ -12,7 +12,7 @@ import {filterRecord,useRecord} from '../../components/contexts/Records/recordSt
 import {useNavigation} from '@react-navigation/native'
 
 
-const FilterRecord = () => {
+const FilterRecord = ({route}) => {
     const navigation = useNavigation()
     const [driverstate,driverDispatch] = useDriver()
     const [tractorstate,tractorDispatch] = useTractor()
@@ -51,10 +51,16 @@ const FilterRecord = () => {
 
         setPlowlist(() => plows)
 
+        if(route.params?.isfiltered){
+            setDriver(route.params.driver)
+            fromsetDate(route.params.fromdate)
+            tosetDate(route.params.todate)
+        }
+
     },[])
 
     const onSubmit = async() => {
-        if(driver.trim()=="" || tractors.trim()=="" || plows.trim()==""){
+        if(driver.trim()==""){
             ToastAndroid.show("Please fill required fields",ToastAndroid.SHORT)
             return
         }
@@ -63,12 +69,12 @@ const FilterRecord = () => {
         setloading(true)
         let res
         // console.log(driver,tractor,plow);
-        res=await filterRecord(driver,tractor,plow,1,recordDispatch)
+        res=await filterRecord(driver,fromdate,todate,0,recordDispatch)
         if(res.status=="success")
         {
             setloading(false)
             ToastAndroid.show(res.msg,ToastAndroid.SHORT)
-            navigation.navigate('search-record',{search:true,driver,plow,tractor,showmore:true})
+            navigation.navigate('search-record',{search:true,driver,fromdate,todate,showmore:true})
         }else{
             ToastAndroid.show(res.msg,ToastAndroid.SHORT)
         }
@@ -89,30 +95,6 @@ const FilterRecord = () => {
                     value={driver}
                     setValue={setDriver}
                     dropDownStyle={tw `mt-2`}
-                />}
-                {tractorlist.length > 0 && <DropDown 
-                    label='Tractor*'
-                    list={tractorlist}
-                    mode={'outlined'}
-                    visible={tractordrop}
-                    showDropDown={() => setTractordrop(true)}
-                    onDismiss={() => setTractordrop(false)}
-                    value={tractors}
-                    setValue={setTractors}
-                    dropDownStyle={tw `mt-2`}
-                    multiSelect
-                />}
-                {plowlist.length > 0 && <DropDown 
-                    label='Plow*'
-                    list={plowlist}
-                    mode={'outlined'}
-                    visible={plowdrop}
-                    showDropDown={() => setPlowdrop(true)}
-                    onDismiss={() => setPlowdrop(false)}
-                    value={plows}
-                    setValue={setPlows}
-                    dropDownStyle={{marginVertical:10}}
-                    multiSelect
                 />}
                 <Text style={tw `text-lg font-semibold`}>Date Range</Text>
                 <TextInput 
