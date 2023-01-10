@@ -128,8 +128,24 @@ const SearchRecordMenu = ({route}) => {
       navigation.navigate('search-record')
     }
 
+    const SearchOnRecord = () => {
+      if(searchvalue.trim()=="")
+      {
+        ToastAndroid.show("Please Enter search value",ToastAndroid.SHORT)
+        return
+      }
+      let result = state.records.filter(record => record.place.toLowerCase().includes(searchvalue.toLowerCase()) || record.farmer.toLowerCase().includes(searchvalue.toLowerCase()))
+      setSearches(result)
+      // if(result.length>5){
+      //   setShow(true)
+      // }
+    }
+
     const onSearch = () => {
-      if(state.filtered.length==0)return
+      if(state.filtered.length==0){
+        SearchOnRecord()
+        return
+      }
       if(searchvalue.trim()=="")
       {
         ToastAndroid.show("Please Enter search value",ToastAndroid.SHORT)
