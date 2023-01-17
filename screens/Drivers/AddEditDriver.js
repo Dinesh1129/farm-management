@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import {View,SafeAreaView,ScrollView,ToastAndroid} from 'react-native'
+import {View,SafeAreaView,ScrollView,ToastAndroid,ActivityIndicator,Alert} from 'react-native'
 import tw from 'twrnc'
 import { addDriver, clearCurrentDriver, deleteDriver, updateDriver, useDriver } from '../../components/contexts/driver/driverState'
 import { MyButton } from '../Tractors/AddEditTractor'
@@ -17,22 +17,23 @@ const AddEditDriver = ({route}) => {
     const [email,setEmail] = useState("")
     const [phone,setphone] = useState("")
     const [license,setlicense] = useState("")
+    const [loading,setloading] = useState(false)
    var type = route.params?.type
 
    useEffect(() => {
     const current = driverstate.current
     if(type=="edit"){
-                setId(current.id)
+                setId(current._id)
                 setName(current.name)
                 setEmail(current.email)
-                setphone(current.phone)
+                setphone(current.phone.toString())
                 setlicense(current.license)
            }
            else{
             setId(uuid.v4())
            }
    },[])
-   const OnSubmit = () => {
+   const OnSubmit = async () => {
     if(Name.trim() === "" || phone.trim()=== "" || license.trim()=== ""){
         ToastAndroid.show("Please fill required fields",ToastAndroid.SHORT)
         return
@@ -44,19 +45,59 @@ const AddEditDriver = ({route}) => {
         phone,
         license
     }
+    setloading(true)
+    let res
     if(type=="edit"){
-        updateDriver(driver.id,driver,dispatch)
+        res = await updateDriver(driver.id,driver,dispatch)
     }else{
-        addDriver(driver.id,driver,dispatch)
+       res =await addDriver(driver,dispatch)
     }
-    clearCurrentDriver(dispatch)
-    navigation.goBack()
+    if(res.status=="success"){
+        ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+        clearCurrentDriver(dispatch)
+        setloading(false)
+        navigation.goBack()
+    }else{
+        setloading(false)
+        ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+    }
    }
 
-   const OnDelete = () => {
-        deleteDriver(id,dispatch)
-        clearCurrentDriver(dispatch)
-        navigation.goBack()
+   const deleteConfirmation = async () => {
+    let res
+    Alert.alert(
+        "Delete Confirmation",
+        `Are You sure,${Name} will permanently deleted ?`,
+        [
+            {
+                text:"Cancel",
+                style:"cancel",
+                onPress:() => {}
+            },
+            {
+                text:"Delete",
+                style:"destructive",
+                onPress:async() =>{
+                    setloading(true)
+                    res = await deleteDriver(id,dispatch)
+                    setloading(false)
+                    if(res.status=="success"){
+                        ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+                        clearCurrentDriver(dispatch)
+                        navigation.goBack()
+                    }
+                    else{
+                        ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+                    }
+                }
+            }
+        ]
+    )
+    
+}
+
+   const OnDelete = async() => {
+        await deleteConfirmation()
    }
    
   return (
@@ -102,6 +143,7 @@ const AddEditDriver = ({route}) => {
                     />
                     <MyButton cb={OnSubmit} value={type=="edit"? "Update" : "Add"}/>
                     {type=="edit" && <MyButton cb={OnDelete} value="Delete"/>}
+                    <ActivityIndicator animating={loading} size="large" />
                 </View>
             </View>
         </ScrollView>

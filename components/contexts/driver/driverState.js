@@ -13,75 +13,118 @@ export const useDriver = () => {
 
 export const getDrivers = async(dispatch) => {
     try {
-        const json = await AsyncStorage.getItem(DRIVERS_KEY)
-        if(json){
-            const data = JSON.parse(json)
+        const userid = await AsyncStorage.getItem("userid")
+        console.log("user id is : ",userid)
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/drivers/user/${userid}`)
+        if(res.status!=200){
+            return false;
+        }
+        const data = await res.json()
+
+        if(data){
             dispatch({
                 type: ALL_DRIVER,
                 payload:data
             })
         }
         
-        
+        return {status:"success"}
         
     } catch (error) {
-        console.log(error,'error in gets drivers')
+        return {status:"fail",msg:error.msg}
     }
 }
 
-export const getDriver = async(key,dispatch) => {
+export const getDriver = async(id,dispatch) => {
     try {
-       const json= await AsyncStorage.getItem(key)
-       const data = JSON.parse(json)
+        
+       const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/drivers/${id}`)
+       if(res.status!=200){
+            throw await res.json()
+       }
+       const data = await res.json()
+       
         dispatch({
             type:GET_DRIVER,
             payload:data
         })
+        return {status:"success"}
     } catch (error) {
-        console.log(error,'error in get driver----------')
+        return {status:"fail",msg:error.msg}
     }
 }
 
-export const addDriver = async (key,driver,dispatch) => {
+export const addDriver = async (driver,dispatch) => {
     try {
-        const json = JSON.stringify(driver)
-        await AsyncStorage.setItem(key,json)
-        const data = {
-            id:driver.id,
-            name:driver.name
+        const userid = await AsyncStorage.getItem("userid")
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/drivers/add`,{
+            method:'POST',
+            headers:{
+                'Content-Type':"application/json"
+            },
+            body: JSON.stringify({
+                ...driver,
+                userid
+            })
+        })
+        if(res.status!=201){
+            throw await res.json()
         }
-        
+        const data = await res.json()
+
         dispatch({
             type:ADD_DRIVER,
             payload:data
         })
+        return {status:"success",msg:"Added Successfully"}
     } catch (error) {
-        console.log(error,'error in add driver----------')
+       return {status:"fail",msg:error.msg}
     }
 } 
 
-export const updateDriver = async (key,driver,dispatch)=>{
+export const updateDriver = async (id,driver,dispatch)=>{
     try {
-        const json = JSON.stringify(driver)
-        await AsyncStorage.setItem(key,json)
+        const userid = await AsyncStorage.getItem("userid")
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/drivers/${id}`,{
+            method:"PUT",
+            headers:{
+                'Content-Type':"application/json"
+            },
+            body:JSON.stringify({
+                ...driver,
+                userid
+            })
+        })
+        if(res.status!=201){
+            throw await res.json()
+        }
+        const data = await res.json()
         dispatch({
             type:UPDATE_DRIVER,
-            payload:driver
+            payload:data
         })
+        return {status:"success",msg:"Updated Successfully"}
     } catch (error) {
-        console.log(error,'error in update driver----------')
+        return {status:"fail",msg:error.msg}
     }
 }
 
-export const deleteDriver = async (key,dispatch) => {
+export const deleteDriver = async (id,dispatch) => {
     try {
-        await AsyncStorage.removeItem(key)
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/drivers/${id}`,{
+            method:"DELETE",
+        })
+        if(res.status!=200){
+            throw await res.json()
+        }
+        const data = await res.json()
         dispatch({
             type:DELETE_DRIVER,
-            payload:key
+            payload:data._id
         })
+        return {status:"success",msg:"Deleted Successfully"}
     } catch (error) {
-        console.log(error,'error in delete driver----------')
+       return {status:"fail",msg:error?.msg}
     }
 }
 

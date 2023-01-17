@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { ADD_RECORD, ALL_RECORD, CLEAR_CURRENT_RECORD, CURRENT_RECORD, DELETE_RECORD, GET_RECORD, RECORD_KEY, UPDATE_RECORD } from "../types"
+import { ADD_RECORD, ALL_RECORD, CLEAR_CURRENT_RECORD, CURRENT_RECORD, DELETE_RECORD, FILTER_RECORD, GET_RECORD, RECORD_KEY, UPDATE_RECORD,APPEND_FILTER_RECORD, APPEND_ALL_RECORD, CLEAR_FILTERED_RECORD } from "../types"
 
 export default (state,action) => {
     switch(action.type){
@@ -8,15 +8,25 @@ export default (state,action) => {
                 ...state,
                 records:[...action.payload]
             };
-        case ADD_RECORD:
-            async function quickcall(){
-                const data = [...state?.records,action.payload]
-                await AsyncStorage.setItem(RECORD_KEY,JSON.stringify(data))
+        case APPEND_ALL_RECORD:
+            return{
+                ...state,
+                records:[...state.records,...action.payload]
             }
-            quickcall()
+        case FILTER_RECORD:
             return {
                 ...state,
-                records:[...state.records,action.payload]
+                filtered:action.payload
+            };
+        case APPEND_FILTER_RECORD:
+            return {
+                ...state,
+                filtered:[...state.records,...action.payload]
+            };
+        case ADD_RECORD:
+            return {
+                ...state,
+                records:[action.payload,...state.records]
             };
         case GET_RECORD:
             return {
@@ -24,35 +34,14 @@ export default (state,action) => {
                 current:action.payload  
             };
         case UPDATE_RECORD:
-            async function updatecall(){
-                const data = state.records.map(record => record.id === action.payload.id ? {...record,drivername:action.payload.drivername,farmname:action.payload.place,date:action.payload.date,worktime:action.payload.worktime} : record)
-                
-                if(data.length>0){
-                    await AsyncStorage.setItem(RECORD_KEY,JSON.stringify(data))
-                }else{
-                    await AsyncStorage.removeItem(RECORD_KEY)
-                }
-                
-            }
-            updatecall()
             return{
                 ...state,
-                records:state.records.map(record => record.id===action.payload.id ? action.payload : record)
+                records:state.records.map(record => record._id===action.payload._id ? action.payload : record)
             };
         case DELETE_RECORD:
-            async function deletecall(){
-                const data = state.records.filter(record => record.id !== action.payload)
-                if(data.length>0){
-                    await AsyncStorage.setItem(RECORD_KEY,JSON.stringify(data))
-                }else{
-                    await AsyncStorage.removeItem(RECORD_KEY)
-                }
-                
-            }
-            deletecall()
             return{
                 ...state,
-                records:state.records.filter(record => record.id !== action.payload)
+                records:state.records.filter(record => record._id !== action.payload)
             };
         case CURRENT_RECORD:
             return {
@@ -64,6 +53,11 @@ export default (state,action) => {
                 ...state,
                 current:null
             };
+        case CLEAR_FILTERED_RECORD:
+            return {
+                ...state,
+                filtered:[]
+            }
         default:
             throw new Error('unspported type')
     }

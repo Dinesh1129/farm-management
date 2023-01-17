@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import {View,Text,TouchableOpacity,SafeAreaView,FlatList,Button,ToastAndroid,ScrollView} from 'react-native'
+import {View,Text,TouchableOpacity,SafeAreaView,FlatList,Button,ToastAndroid,ScrollView,ActivityIndicator,Alert} from 'react-native'
 import tw from 'twrnc'
 import {useNavigation} from '@react-navigation/native'
 import { addTractor, clearCurrentTractor, deleteTractor, updateTractor, useTractor } from '../../components/contexts/Tractors/tractorState'
@@ -25,24 +25,25 @@ const AddEditTractor = ({route}) => {
     const [company,setCompany] = useState("")
     const [registrationNumber,setRegistrationNumber] = useState("")
     const [color,setColor] = useState("")
+    const [loading,setloading] = useState(false)
    var type = route.params?.type
 
    useEffect(() => {
     const current = tractorState.current
     if(type=="edit"){
-                setId(current.id)
+                setId(current._id)
                 setName(current.name)
                 setSize(current.size)
                 setModel(current.model)
                 setCompany(current.company)
-                setRegistrationNumber(current.registration)
+                setRegistrationNumber(current.registrationnumber)
                 setColor(current.color)
            }
            else{
             setId(uuid.v4())
            }
    },[])
-   const OnSubmit = () => {
+   const OnSubmit = async() => {
     if(Name.trim() === "" || company.trim()=== "" || registrationNumber.trim()=== ""){
         ToastAndroid.show("Please fill required fields",ToastAndroid.SHORT)
         return
@@ -54,21 +55,62 @@ const AddEditTractor = ({route}) => {
         company,
         model,
         size:Size,
-        registration:registrationNumber
+        registrationnumber:registrationNumber
     }
+    setloading(true)
+    let res
     if(type=="edit"){
-        updateTractor(tractor.id,tractor,dispatch)
+      res =await  updateTractor(tractor.id,tractor,dispatch)
     }else{
-        addTractor(tractor.id,tractor,dispatch)
+       res = await addTractor(tractor,dispatch)
     }
-    clearCurrentTractor(dispatch)
-    navigation.goBack()
-   }
-
-   const OnDelete = () => {
-        deleteTractor(id,dispatch)
+    if(res.status=="success"){
+        ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+        setloading(false)
         clearCurrentTractor(dispatch)
         navigation.goBack()
+    }else{
+        ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+        setloading(false)
+    }
+    
+   }
+
+   const deleteConfirmation = async () => {
+    let res
+    Alert.alert(
+        "Delete Confirmation",
+        `Are You sure,${Name} will permanently deleted ?`,
+        [
+            {
+                text:"Cancel",
+                style:"cancel",
+                onPress:() => {}
+            },
+            {
+                text:"Delete",
+                style:"destructive",
+                onPress:async() =>{
+                    setloading(true)
+                    res = await deleteTractor(id,dispatch)
+                    setloading(false)
+                    if(res.status=="success"){
+                        ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+                        clearCurrentTractor(dispatch)
+                        navigation.goBack()
+                    }
+                    else{
+                        ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+                    }
+                }
+            }
+        ]
+    )
+    
+}
+
+   const OnDelete = async() => {
+        await deleteConfirmation()
    }
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
@@ -137,6 +179,7 @@ const AddEditTractor = ({route}) => {
                     />
                     <MyButton cb={OnSubmit} value={type=="edit"? "Update" : "Add"}/>
                     {type=="edit" && <MyButton cb={OnDelete} value="Delete"/>}
+                    <ActivityIndicator animating={loading} size="large" />
                 </View>
             </View>
         </ScrollView>

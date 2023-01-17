@@ -12,76 +12,112 @@ export const useTractor = () => {
 
 export const getTractors = async(dispatch) => {
     try {
-        const json = await AsyncStorage.getItem(TRACTOR_KEY)
-        if(json){
-            const data = JSON.parse(json)
-            dispatch({
-                type: ALL_TRACTOR,
-                payload:data
-            })
+        const userid = await AsyncStorage.getItem("userid")
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/tractors/user/${userid}`)
+        if(res.status!=200){
+            return false
         }
-        
-        
-        
+        const data = await res.json()
+        dispatch({
+            type: ALL_TRACTOR,
+            payload:data
+        })
+        return {status:"success"}
     } catch (error) {
-        console.log(error,'error in gets tractors')
+        return {status:"fail",msg:error?.msg}
     }
 }
 
-export const getTractor = async(key,dispatch) => {
+export const getTractor = async(id,dispatch) => {
     try {
-       const json= await AsyncStorage.getItem(key)
-       const data = JSON.parse(json)
+       const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/tractors/${id}`)
+       if(res.status!=200){
+            false
+       }
+       const data = await res.json()
         dispatch({
             type:GET_TRACTOR,
             payload:data
         })
+        return {status:"success"}
     } catch (error) {
-        console.log(error,'error in get tractor----------')
+        return {status:"fail",msg:error?.msg}
     }
 }
 
-export const addTractor = async (key,tractor,dispatch) => {
+export const addTractor = async (tractor,dispatch) => {
     try {
-        const json = JSON.stringify(tractor)
-        await AsyncStorage.setItem(key,json)
-        const data = {
-            id:tractor.id,
-            name:tractor.name
+        const userid = await AsyncStorage.getItem("userid")
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/tractors/add`,{
+            method:"POST",
+            headers:{
+                'Content-Type':"application/json"
+            },
+            body:JSON.stringify({
+                ...tractor,
+                userid
+            })
+        })
+        
+        if(res.status!=201){
+            throw await res.json()
         }
+        const data = await res.json()
         
         dispatch({
             type:ADD_TRACTOR,
             payload:data
         })
+        return {status:"success",msg:"Added Successfully"}
     } catch (error) {
-        console.log(error,'error in add tractor----------')
+        return {status:"fail",msg:error?.msg}
     }
 } 
 
-export const updateTractor = async (key,tractor,dispatch)=>{
+export const updateTractor = async (id,tractor,dispatch)=>{
     try {
-        const json = JSON.stringify(tractor)
-        await AsyncStorage.setItem(key,json)
+        const userid = await AsyncStorage.getItem("userid")
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/tractors/${id}`,{
+            method:"PUT",
+            headers:{
+                'Content-Type':"application/json"
+            },
+            body:JSON.stringify({
+                ...tractor,
+                userid
+            })
+        })
+        if(res.status!=201){
+            throw await res.json()
+        }
+        const data = await res.json()
         dispatch({
             type:UPDATE_TRACTOR,
-            payload:tractor
+            payload:data
         })
+        return {status:"success",msg:"Updated Successfully"}
 
     } catch (error) {
-        console.log(error,'error in update tractor----------')
+        return {status:"fail",msg:error?.msg}
     }
 }
 
-export const deleteTractor = async (key,dispatch) => {
+export const deleteTractor = async (id,dispatch) => {
     try {
-        await AsyncStorage.removeItem(key)
+        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/tractors/${id}`,{
+            method:"DELETE"
+        })
+        if(res.status!=200){
+            throw await res.json()
+        }
+        const data = await res.json()
         dispatch({
             type:DELETE_TRACTOR,
-            payload:key
+            payload:data._id
         })
+        return {status:"success",msg:"Deleted Successfully"}
     } catch (error) {
-        
+        return {status:"fail",msg:error?.msg}
     }
 }
 

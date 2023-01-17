@@ -11,7 +11,7 @@ const Drivers = () => {
   useEffect(() => {
     
     getDrivers(dispatch)
-  },[])
+  },[JSON.stringify(state.drivers)])
   
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>

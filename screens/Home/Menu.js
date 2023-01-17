@@ -35,10 +35,6 @@ const Menu = () => {
                 <TouchableOpacity style={tw `mt-2 h-[150px] w-[150px] bg-[#fcba03] justify-center items-center flex flex-row`} onPress={() => navigation.navigate('plows')}>
                     <Text style={tw `text-center text-black`}>Plows</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={tw `mt-2 h-[150px] w-[150px] bg-[#fcba03] justify-center items-center flex flex-col`} onPress={() => navigation.navigate('search-record')}>
-                    <Text style={tw `text-center text-black`}>Search</Text>
-                    <Text style={tw `text-center text-black`}>Records</Text>
-                </TouchableOpacity>
             </View>
         </View>
     </View>

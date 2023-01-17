@@ -1,5 +1,4 @@
 import {ADD_DRIVER,UPDATE_DRIVER,ALL_DRIVER,DELETE_DRIVER,ERROR_DRIVER,GET_DRIVER,CURRENT_DRIVER,CLEAR_CURRENT_DRIVER,DRIVERS_KEY} from '../types'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const driverReducer = (state,action) => {
     switch(action.type){
@@ -9,11 +8,6 @@ const driverReducer = (state,action) => {
                 drivers:[...action.payload]
             };
         case ADD_DRIVER:
-            async function quickcall(){
-                const data = [...state?.drivers,action.payload]
-                await AsyncStorage.setItem(DRIVERS_KEY,JSON.stringify(data))
-            }
-            quickcall()
             return {
                 ...state,
                 drivers:[...state.drivers,action.payload]
@@ -24,35 +18,14 @@ const driverReducer = (state,action) => {
                 current:action.payload  
             };
         case UPDATE_DRIVER:
-            async function updatecall(){
-                const data = state.drivers.map(driver => driver.id === action.payload.id ? {...driver,name:action.payload.name} : driver)
-                
-                if(data.length>0){
-                    await AsyncStorage.setItem(DRIVERS_KEY,JSON.stringify(data))
-                }else{
-                    await AsyncStorage.removeItem(DRIVERS_KEY)
-                }
-                
-            }
-          updatecall()
             return{
                 ...state,
-                drivers:state.drivers.map(driver => driver.id===action.payload.id ? action.payload : driver)
+                drivers:state.drivers.map(driver => driver._id===action.payload._id ? action.payload : driver)
             };
         case DELETE_DRIVER:
-            async function deletecall(){
-                const data = state.drivers.filter(driver => driver.id !== action.payload)
-                if(data.length>0){
-                    await AsyncStorage.setItem(DRIVERS_KEY,JSON.stringify(data))
-                }else{
-                    await AsyncStorage.removeItem(DRIVERS_KEY)
-                }
-                
-            }
-           deletecall()
             return{
                 ...state,
-                drivers:state.drivers.filter(driver => driver.id !== action.payload)
+                drivers:state.drivers.filter(driver => driver._id !== action.payload)
             };
         case CURRENT_DRIVER:
             return {
