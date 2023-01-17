@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useContext, useReducer } from "react"
 import UserContext from "./userContext"
 import UserReducer from "./userReducer"
+import {SERVER} from '../types'
 
 export const useloginAuth = () => {
     const {state,dispatch} = useContext(UserContext)
@@ -10,10 +11,9 @@ export const useloginAuth = () => {
 
 export const login = async(email,password) => {
     try {
-        const res = await fetch('https://tractrack.netlify.app/.netlify/functions/api/user/login',{
+        const res = await fetch(`${SERVER}/user/login`,{
         method:'POST',
         headers:{
-            Accept: 'application/json',
             'Content-Type':'application/json'
         },
         body:JSON.stringify({
@@ -30,7 +30,7 @@ export const login = async(email,password) => {
     
     return {status:"success",msg:"Login Success"}
     } catch (error) {
-        // console.log(error)
+        console.log(error)
         return {status:"fail",msg:error?.msg}
         return false
     }
@@ -38,10 +38,9 @@ export const login = async(email,password) => {
 
 export const register = async(email,password,phone,name) => {
     try {
-        const res = await fetch('https://tractrack.netlify.app/.netlify/functions/api/user/register',{
+        const res = await fetch(`${SERVER}/user/register`,{
         method:'POST',
         headers:{
-            Accept: 'application/json',
             'Content-Type':'application/json'
         },
         body:JSON.stringify({

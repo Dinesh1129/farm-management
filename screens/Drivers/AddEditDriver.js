@@ -34,7 +34,7 @@ const AddEditDriver = ({route}) => {
            }
    },[])
    const OnSubmit = async () => {
-    if(Name.trim() === "" || phone.trim()=== "" || license.trim()=== ""){
+    if(Name.trim() === "" || license.trim()=== ""){
         ToastAndroid.show("Please fill required fields",ToastAndroid.SHORT)
         return
     }
@@ -45,6 +45,7 @@ const AddEditDriver = ({route}) => {
         phone,
         license
     }
+    console.log(driver)
     setloading(true)
     let res
     if(type=="edit"){
@@ -125,8 +126,8 @@ const AddEditDriver = ({route}) => {
                     />
                     <TextInput 
                         keyboardType='number-pad'
-                        placeholder='Phone Number*'
-                        label={'Phone Number*'}
+                        placeholder='Phone Number'
+                        label={'Phone Number'}
                         mode={'outlined'}
                         value={phone}
                         style={tw `mt-2`}

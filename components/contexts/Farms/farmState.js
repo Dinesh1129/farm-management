@@ -1,26 +1,26 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import React,{useContext,useReducer} from "react"
-import { ADD_PLOW, ALL_PLOW, CLEAR_CURRENT_PLOW, CURRENT_PLOW, DELETE_PLOW, GET_PLOW, PLOW_KEY, UPDATE_PLOW,SERVER } from "../types"
-import PlowContext from "./plowContext"
-import PlowReducer from "./plowReducer"
+import { ADD_FARM,GET_FARM,ALL_FARM,CURRENT_FARM,UPDATE_FARM,DELETE_FARM,SERVER, CLEAR_CURRENT_FARM } from "../types"
+import FarmContext from "./farmContext"
+import FarmReducer from "./farmReducer"
 
 
-export const usePlow = () => {
-    const {state,dispatch} = useContext(PlowContext)
+export const useFarm = () => {
+    const {state,dispatch} = useContext(FarmContext)
     return [state,dispatch]
 }
 
-export const getPlows = async(dispatch) => {
+export const getFarms = async(dispatch) => {
     try {
         const userid = await AsyncStorage.getItem("userid")
-        const res = await fetch(`${SERVER}/plows/user/${userid}`)
+        const res = await fetch(`${SERVER}/farms/user/${userid}`)
         if(res.status!=200){
             return false
         }
         const data = await res.json()
             
         dispatch({
-            type: ALL_PLOW,
+            type: ALL_FARM,
             payload:data
         })
         return {status:"success"}
@@ -29,16 +29,16 @@ export const getPlows = async(dispatch) => {
     }
 }
 
-export const getPlow = async(id,dispatch) => {
+export const getFarm = async(id,dispatch) => {
     try {
-        const res = await fetch(`${SERVER}/plows/${id}`)
+        const res = await fetch(`${SERVER}/farms/${id}`)
         if(res.status!=200){
             return false
         }
         const data = await res.json()
         
         dispatch({
-            type:GET_PLOW,
+            type:GET_FARM,
             payload:data
         })
         return {status:"success"}
@@ -47,26 +47,25 @@ export const getPlow = async(id,dispatch) => {
     }
 }
 
-export const addPlow = async(plow,dispatch) => {
+export const addFarm = async(farm,dispatch) => {
     try {
         const userid = await AsyncStorage.getItem("userid")
-        const res = await fetch(`${SERVER}/plows/add`,{
+        const res = await fetch(`${SERVER}/farms/add`,{
             method:"POST",
             headers:{
                 'Content-Type':"application/json"
             },
             body:JSON.stringify({
-                ...plow,
+               ...farm,
                 userid
             })
         })
-        
         if(res.status!=201){
             throw await res.json()
         }
         const data = await res.json()
         dispatch({
-            type: ADD_PLOW,
+            type: ADD_FARM,
             payload:data
         })
         return {status:"success",msg:"Added Successfully"}
@@ -75,16 +74,16 @@ export const addPlow = async(plow,dispatch) => {
     }
 }
 
-export const updatePlow = async (id,plow,dispatch) => {
+export const updateFarm = async (id,farm,dispatch) => {
     try {
        const userid = await AsyncStorage.getItem("userid")
-       const res = await fetch(`${SERVER}/plows/${id}`,{
+       const res = await fetch(`${SERVER}/farms/${id}`,{
         method:"PUT",
         headers:{
             'Content-Type':"application/json"
         },
         body:JSON.stringify({
-            ...plow,
+            ...farm,
             userid
         })
        })
@@ -93,7 +92,7 @@ export const updatePlow = async (id,plow,dispatch) => {
        }
        const data = await res.json()
         dispatch({
-            type:UPDATE_PLOW,
+            type:UPDATE_FARM,
             payload:data
         })
         return {status:"success",msg:"Updated Successfully"}
@@ -102,9 +101,9 @@ export const updatePlow = async (id,plow,dispatch) => {
     }
 }
 
-export const deletePlow = async (id,dispatch) => {
+export const deleteFarm = async (id,dispatch) => {
     try {
-        const res = await fetch(`${SERVER}/plows/${id}`,{
+        const res = await fetch(`${SERVER}/farms/${id}`,{
             method: "DELETE"
         })
         if(res.status!=200){
@@ -112,7 +111,7 @@ export const deletePlow = async (id,dispatch) => {
         }
         const data = await res.json()
         dispatch({
-            type:DELETE_PLOW,
+            type:DELETE_FARM,
             payload:data._id
         })
         return {status:"success",msg:"Deleted Successfully"}
@@ -121,33 +120,33 @@ export const deletePlow = async (id,dispatch) => {
     }
 }
 
-export const setCurrentPlow = (plow,dispatch) => {
+export const setCurrentFarm = (plow,dispatch) => {
     dispatch({
-        type:CURRENT_PLOW,
+        type:CURRENT_FARM,
         payload:plow
     })
 }
 
-export const clear_current_Plow = (dispatch) => {
+export const clear_current_Farm = (dispatch) => {
     dispatch({
-        type:CLEAR_CURRENT_PLOW
+        type:CLEAR_CURRENT_FARM
     })
 }
 
-const PlowState = ({children}) => {
+const FarmState = ({children}) => {
     const initialState = {
-        plows:[],
+        farms:[],
         current:null,
         errors:null,
         filtered:null
     }
-    const [state,dispatch] = useReducer(PlowReducer,initialState)
+    const [state,dispatch] = useReducer(FarmReducer,initialState)
 
     return (
-        <PlowContext.Provider value={{ state,dispatch }}>
+        <FarmContext.Provider value={{ state,dispatch }}>
             {children}
-        </PlowContext.Provider>
+        </FarmContext.Provider>
     )
 }
 
-export default PlowState
+export default FarmState

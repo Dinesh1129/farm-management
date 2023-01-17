@@ -2,7 +2,7 @@ import React,{useEffect, useMemo, useState} from 'react'
 import {View,ScrollView,SafeAreaView,Text,TouchableOpacity,ToastAndroid,ActivityIndicator} from 'react-native'
 import tw from 'twrnc'
 import {Searchbar} from 'react-native-paper'
-import { filterRecord, getRecords, useRecord,getRecord, clearFilteredRecord } from '../../components/contexts/Records/recordState'
+import { filterRecord, getRecords, useRecord,getRecord, clearFilteredRecord, searchRecord, clearSearchRecord } from '../../components/contexts/Records/recordState'
 import {useNavigation} from '@react-navigation/native'
 import MI from 'react-native-vector-icons/dist/MaterialIcons'
 import FA from 'react-native-vector-icons/dist/FontAwesome'
@@ -28,10 +28,13 @@ const RecordRender = ({record}) => {
     <TouchableOpacity style={tw `mt-1 w-full h-max py-2 px-1 flex flex-row justify-between border`} onPress={() => addType()}>
       <View style={tw `flex flex-col h-full w-11/12`}>
           <Text style={tw `font-semibold text-md`}>{record.date? `${new Date(record.date).toDateString()}` : ''}</Text>
-          <Text style={tw `font-semibold text-md`}>{workTime}</Text>
-          <Text style={tw `font-semibold text-md`}>{record.place? record.place : ''}</Text>
-          <Text style={tw `font-semibold text-md`}>{record.farmer? record.farmer : ''}</Text>
-          <Text style={tw `font-semibold text-md`}>{record.driver? record.driver : ''}</Text>
+          <Text style={tw `font-semibold text-md`}>Hours Worked : {workTime}</Text>
+          <Text style={tw `font-semibold text-md`}>Place : {record.place? record.place : ''}</Text>
+          <Text style={tw `font-semibold text-md`}>Farmer : {record.farmer? record.farmer : ''}</Text>
+          <Text style={tw `font-semibold text-md`}>Driver : {record.driver? record.driver : ''}</Text>
+          <Text style={tw `font-semibold text-md`}>Total Amount : {record.totalamount? record.totalamount : ''}</Text>
+          <Text style={tw `font-semibold text-md`}>Total Amount Collected : {record.amountCollected? record.amountCollected : ''}</Text>
+          <Text style={tw `font-semibold text-md`}>Balance Amount : {record.amountBalance? record.amountBalance : ''}</Text>
       </View>
     <MI name={'edit'} size={25} color={'black'}/>
 </TouchableOpacity>
@@ -48,6 +51,7 @@ const SearchRecordMenu = ({route}) => {
     const [clearfilter,setclearFilter] = useState(false)
     const [show,setShow] = useState(true)
     const [searches,setSearches] = useState([])
+    const [searchStart,setSearchStart] = useState(0)
 
    useEffect(() => {
     if(route.params?.search){
@@ -87,6 +91,15 @@ const SearchRecordMenu = ({route}) => {
       return totalamount
     },[JSON.stringify(state.filtered)])
 
+    const amountCollected = useMemo(() => {
+      const amountcollected = state.filtered.reduce((prev,record) => prev+=record.amountCollected,0)
+      return amountcollected
+    },[JSON.stringify(state.filtered)])
+
+    const amountBalance = useMemo(() => {
+      const amountbalance = state.filtered.reduce((prev,record) => prev+=record.amountBalance,0)
+      return amountbalance
+    },[JSON.stringify(state.filtered)])
 
     const ShowMore = async() => {
       let Start=start+5;
@@ -95,7 +108,7 @@ const SearchRecordMenu = ({route}) => {
       {
         let res
         setloading(true)
-        res = await filterRecord(route.params.driver,route.params.fromdate,route.params.todate,Start,dispatch)
+        res = await filterRecord(route.params.farm,route.params.driver,route.params.fromdate,route.params.todate,Start,dispatch)
         if(res.status=="empty")
         {
             setloading(false)
@@ -107,6 +120,18 @@ const SearchRecordMenu = ({route}) => {
             ToastAndroid.show(res.msg,ToastAndroid.SHORT)
         }
         setloading(false)
+      }else if(state.searched.length>0){
+        let result
+        setloading(true)
+        result=await searchRecord(searchvalue,searchStart,dispatch)
+        if(result.status=="success"){
+          setloading(false)
+          setSearchStart(searchStart+1)
+        }else{
+          setloading(false)
+          setSearchStart(0)
+          setShow(false)
+        }
       }else{
        let res= await getRecords(dispatch,start+5)
         if(res.status=="empty")
@@ -128,14 +153,23 @@ const SearchRecordMenu = ({route}) => {
       navigation.navigate('search-record')
     }
 
-    const SearchOnRecord = () => {
+    const SearchOnRecord = async() => {
       if(searchvalue.trim()=="")
       {
         ToastAndroid.show("Please Enter search value",ToastAndroid.SHORT)
         return
       }
-      let result = state.records.filter(record => record.place.toLowerCase().includes(searchvalue.toLowerCase()) || record.farmer.toLowerCase().includes(searchvalue.toLowerCase()))
-      setSearches(result)
+      let result
+      setloading(true)
+      result =await searchRecord(searchvalue,searchStart,dispatch)
+      setloading(false)
+      if(result.status=="success"){
+        // setSearchStart(searchStart+1)
+      }else{
+        // setSearchStart(0) 
+      }
+      // let result = state.records.filter(record => record.place.toLowerCase().includes(searchvalue.toLowerCase()) || record.farmer.toLowerCase().includes(searchvalue.toLowerCase()))
+      // setSearches(result)
       // if(result.length>5){
       //   setShow(true)
       // }
@@ -161,7 +195,7 @@ const SearchRecordMenu = ({route}) => {
 
     const filterScreen = () => {
       if(route.params?.search){
-        navigation.navigate('filter-record',{isfiltered:true,driver:route.params.driver,fromdate:route.params.fromdate,todate:route.params.todate})
+        navigation.navigate('filter-record',{isfiltered:true,driver:route.params.driver,fromdate:route.params.fromdate,todate:route.params.todate,farm:route.params.farm})
         return
       }
       navigation.navigate('filter-record')
@@ -170,6 +204,8 @@ const SearchRecordMenu = ({route}) => {
     const onClearSearch = () => {
         setsearchvalue("")
         setSearches([])
+        clearSearchRecord(dispatch)
+        setShow(true)
     }
 
   return (
@@ -177,7 +213,7 @@ const SearchRecordMenu = ({route}) => {
         <ScrollView style={tw `min-h-screen w-full relative`}>
             <View style={tw `h-full w-full p-2`}>
               <View style={tw `w-full flex flex-row items-center justify-between`}>
-                <Searchbar 
+                {/* <Searchbar 
                       placeholder='Search Records'
                       keyboardType='default'
                       mode='outlined'
@@ -188,33 +224,41 @@ const SearchRecordMenu = ({route}) => {
                       onSubmitEditing={() => {onSearch()}}
                       clearIcon={() => <TouchableOpacity onPress={() => onClearSearch()}><MI name={'close'} size={25} color={'black'}/></TouchableOpacity>}
                       style={tw `my-2 w-9/12`}
-                    />
-                  <TouchableOpacity style={tw`ml-1 w-3/12 py-3.5 rounded-md bg-[#3b82f6]`} onPress={() => filterScreen()}>
+                    /> */}
+                  <TouchableOpacity style={tw`my-1 w-full py-3.5 rounded-md bg-[#3b82f6]`} onPress={() => filterScreen()}>
                     <Text style={tw `text-center text-white text-lg font-bold`}>Filter</Text>
                   </TouchableOpacity>
               </View>
               {state.filtered.length>0 && <TouchableOpacity style={tw`h-max w-max p-2 bg-[#5203fc] text-sm font-normal text-capitalize`} onPress={() => { onClearFilter() }}><Text style={tw`text-[#f7f7f7] text-center`}>Clear Filter</Text></TouchableOpacity>}
               {state.filtered.length > 0 && <View style={tw `my-2 p-1 border-1 flex flex-col items-center`}>
                 <View style={tw`flex flex-row items-center`}>
-                    <Text>Total Hours driver drived: </Text>
+                    <Text>Total Hours farmer worked: </Text>
                     <Text style={tw `text-lg font-bold`}>{worktime}</Text>
                 </View>
                 <View style={tw`flex flex-row items-center`}>
                     <Text>Total amount of money earned: </Text>
                     <Text style={tw `text-lg font-bold`}><FA name='rupee' size={20}/> {amount}</Text>
                 </View>
+                <View style={tw`flex flex-row items-center`}>
+                    <Text>Total amount of money collected: </Text>
+                    <Text style={tw `text-lg font-bold`}><FA name='rupee' size={20}/> {amountCollected}</Text>
+                </View>
+                <View style={tw`flex flex-row items-center`}>
+                    <Text>Total amount of money Balance: </Text>
+                    <Text style={tw `text-lg font-bold`}><FA name='rupee' size={20}/> {amountBalance}</Text>
+                </View>
               </View>}
-                  {searches.length==0 && state.filtered.length==0 && state.records.map(record => {
+                  {state.searched.length==0 && state.filtered.length==0 && state.records.map(record => {
                     return (
                       <RecordRender  record={record}/>
                     )
                   })}
-                  {searches.length==0 && state.filtered.length > 0 && state.filtered.map(record => {
+                  {state.searched.length==0 && state.filtered.length > 0 && state.filtered.map(record => {
                     return (
                       <RecordRender  record={record}/>
                     )
                   })}
-                  {searches.length > 0 && searches.map(record => {
+                  {state.searched.length > 0 && state.searched.map(record => {
                     return (
                       <RecordRender  record={record}/>
                     )

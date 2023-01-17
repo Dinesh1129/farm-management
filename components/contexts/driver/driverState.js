@@ -1,9 +1,8 @@
 import React,{useReducer,useContext} from 'react'
 import DriverContext from './driverContext'
 import driverReducer from './driverReducer'
-import {ADD_DRIVER,UPDATE_DRIVER,ALL_DRIVER,DELETE_DRIVER,ERROR_DRIVER,GET_DRIVER,CURRENT_DRIVER,CLEAR_CURRENT_DRIVER,DRIVERS_KEY} from '../types'
+import {ADD_DRIVER,UPDATE_DRIVER,ALL_DRIVER,DELETE_DRIVER,ERROR_DRIVER,GET_DRIVER,CURRENT_DRIVER,CLEAR_CURRENT_DRIVER,DRIVERS_KEY,SERVER} from '../types'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
 
 
 export const useDriver = () => {
@@ -15,7 +14,7 @@ export const getDrivers = async(dispatch) => {
     try {
         const userid = await AsyncStorage.getItem("userid")
         console.log("user id is : ",userid)
-        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/drivers/user/${userid}`)
+        const res = await fetch(`${SERVER}/drivers/user/${userid}`)
         if(res.status!=200){
             return false;
         }
@@ -38,7 +37,7 @@ export const getDrivers = async(dispatch) => {
 export const getDriver = async(id,dispatch) => {
     try {
         
-       const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/drivers/${id}`)
+       const res = await fetch(`${SERVER}/drivers/${id}`)
        if(res.status!=200){
             throw await res.json()
        }
@@ -57,7 +56,7 @@ export const getDriver = async(id,dispatch) => {
 export const addDriver = async (driver,dispatch) => {
     try {
         const userid = await AsyncStorage.getItem("userid")
-        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/drivers/add`,{
+        const res = await fetch(`${SERVER}/drivers/add`,{
             method:'POST',
             headers:{
                 'Content-Type':"application/json"
@@ -85,7 +84,7 @@ export const addDriver = async (driver,dispatch) => {
 export const updateDriver = async (id,driver,dispatch)=>{
     try {
         const userid = await AsyncStorage.getItem("userid")
-        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/drivers/${id}`,{
+        const res = await fetch(`${SERVER}/drivers/${id}`,{
             method:"PUT",
             headers:{
                 'Content-Type':"application/json"
@@ -111,7 +110,7 @@ export const updateDriver = async (id,driver,dispatch)=>{
 
 export const deleteDriver = async (id,dispatch) => {
     try {
-        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/drivers/${id}`,{
+        const res = await fetch(`${SERVER}/drivers/${id}`,{
             method:"DELETE",
         })
         if(res.status!=200){

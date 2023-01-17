@@ -10,6 +10,7 @@ const DatePick = ({modalVisible,setModalVisible,setDate}) => {
             date={new Date()}
             open={modalVisible}
             onConfirm={(dat) => {
+                dat.setHours(0,0,0)
                 setDate(dat)
                 setModalVisible(false)
             }}
