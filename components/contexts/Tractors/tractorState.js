@@ -1,5 +1,5 @@
 import React,{useReducer,useContext} from 'react'
-import { ADD_TRACTOR, ALL_TRACTOR, CLEAR_CURRENT_TRACTOR, CURRENT_TRACTOR, DELETE_TRACTOR, GET_TRACTOR, TRACTOR_KEY, UPDATE_TRACTOR } from '../types'
+import { ADD_TRACTOR, ALL_TRACTOR, CLEAR_CURRENT_TRACTOR, CURRENT_TRACTOR, DELETE_TRACTOR, GET_TRACTOR, TRACTOR_KEY, UPDATE_TRACTOR,SERVER } from '../types'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import TractorReducer from './tractorReducer'
 import TractorContext from './TractorContext'
@@ -13,7 +13,7 @@ export const useTractor = () => {
 export const getTractors = async(dispatch) => {
     try {
         const userid = await AsyncStorage.getItem("userid")
-        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/tractors/user/${userid}`)
+        const res = await fetch(`${SERVER}/tractors/user/${userid}`)
         if(res.status!=200){
             return false
         }
@@ -30,7 +30,7 @@ export const getTractors = async(dispatch) => {
 
 export const getTractor = async(id,dispatch) => {
     try {
-       const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/tractors/${id}`)
+       const res = await fetch(`${SERVER}/tractors/${id}`)
        if(res.status!=200){
             false
        }
@@ -48,7 +48,7 @@ export const getTractor = async(id,dispatch) => {
 export const addTractor = async (tractor,dispatch) => {
     try {
         const userid = await AsyncStorage.getItem("userid")
-        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/tractors/add`,{
+        const res = await fetch(`${SERVER}/tractors/add`,{
             method:"POST",
             headers:{
                 'Content-Type':"application/json"
@@ -77,7 +77,7 @@ export const addTractor = async (tractor,dispatch) => {
 export const updateTractor = async (id,tractor,dispatch)=>{
     try {
         const userid = await AsyncStorage.getItem("userid")
-        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/tractors/${id}`,{
+        const res = await fetch(`${SERVER}/tractors/${id}`,{
             method:"PUT",
             headers:{
                 'Content-Type':"application/json"
@@ -104,7 +104,7 @@ export const updateTractor = async (id,tractor,dispatch)=>{
 
 export const deleteTractor = async (id,dispatch) => {
     try {
-        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/tractors/${id}`,{
+        const res = await fetch(`${SERVER}/tractors/${id}`,{
             method:"DELETE"
         })
         if(res.status!=200){

@@ -8,8 +8,10 @@ import { useTractor } from '../../components/contexts/Tractors/tractorState'
 import { usePlow } from '../../components/contexts/plows/plowState'
 import DatePick from '../Records/datepick'
 import { MyButton } from '../Tractors/AddEditTractor'
-import {filterRecord,useRecord} from '../../components/contexts/Records/recordState'
+import {filterRecord,useRecord,clearFilteredRecord,getRecords} from '../../components/contexts/Records/recordState'
 import {useNavigation} from '@react-navigation/native'
+import { useFarm } from '../../components/contexts/Farms/farmState'
+import { log } from 'react-native-reanimated'
 
 
 const FilterRecord = ({route}) => {
@@ -18,18 +20,22 @@ const FilterRecord = ({route}) => {
     const [tractorstate,tractorDispatch] = useTractor()
     const [plowstate,plowDispatch] = usePlow()
     const [recordstate,recordDispatch] = useRecord()
+    const [farmstate,farmDispatch] = useFarm()
     
     const [driverlist,setDriverlist] = useState([])
     const [tractorlist,setTractorlist] = useState([])
     const [plowlist,setPlowlist] = useState([])
+    const [farmlist,setFarmlist] = useState([])
 
     const [driverdrop,setDriverdrop] = useState(false)
     const [tractordrop,setTractordrop] = useState(false)
     const [plowdrop,setPlowdrop] = useState(false)
+    const [farmdrop,setFarmdrop] = useState(false)
 
     const [driver,setDriver] = useState('')
     const [tractors,setTractors] = useState('')
     const [plows,setPlows] = useState('')
+    const [farm,setFarm] = useState('')
 
     const [loading,setloading] = useState(false)
 
@@ -44,23 +50,27 @@ const FilterRecord = ({route}) => {
         const drivers = driverstate.drivers.map(val => ({value:val.name,label:val.name}))
         const tractors = tractorstate.tractors.map(val => ({value:val.name,label:val.name}))
         const plows = plowstate.plows.map(val => ({value:val.name,label:val.name}))
+        const farms = farmstate.farms.map(val => ({value:val.farmername,label:val.farmername}))
         
         setDriverlist(() => drivers)
 
         setTractorlist(() => tractors)
 
         setPlowlist(() => plows)
+        
+        setFarmlist(() => farms)
 
         if(route.params?.isfiltered){
-            setDriver(route.params.driver)
+            setDriver(route.params?.driver)
             fromsetDate(route.params.fromdate)
             tosetDate(route.params.todate)
+            setFarm(route.params.farm)
         }
 
     },[])
 
     const onSubmit = async() => {
-        if(driver.trim()==""){
+        if(farm.trim()==""){
             ToastAndroid.show("Please fill required fields",ToastAndroid.SHORT)
             return
         }
@@ -68,15 +78,18 @@ const FilterRecord = ({route}) => {
         let plow = plows.split(",").slice(1)
         setloading(true)
         let res
-        // console.log(driver,tractor,plow);
-        res=await filterRecord(driver,fromdate,todate,0,recordDispatch)
+        
+        res=await filterRecord(farm,driver,fromdate,todate,0,recordDispatch)
         if(res.status=="success")
         {
             setloading(false)
             ToastAndroid.show(res.msg,ToastAndroid.SHORT)
-            navigation.navigate('search-record',{search:true,driver,fromdate,todate,showmore:true})
+            navigation.navigate('search-record',{search:true,driver,fromdate,todate,showmore:true,farm})
         }else{
             ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+            clearFilteredRecord(recordDispatch)
+            getRecords(recordDispatch);
+            navigation.navigate('search-record')
         }
     }
 
@@ -86,7 +99,7 @@ const FilterRecord = ({route}) => {
             <Text style={tw `text-lg font-semibold`}>Filter By</Text>
 
             {driverlist.length > 0 &&  <DropDown 
-                    label='Driver*'
+                    label='Driver'
                     list={driverlist}
                     mode={'outlined'}
                     visible={driverdrop}
@@ -96,6 +109,18 @@ const FilterRecord = ({route}) => {
                     setValue={setDriver}
                     dropDownStyle={tw `mt-2`}
                 />}
+
+            {farmlist.length > 0 &&  <DropDown 
+                    label='Farm*'
+                    list={farmlist}
+                    mode={'outlined'}
+                    visible={farmdrop}
+                    showDropDown={() => setFarmdrop(true)}
+                    onDismiss={() => setFarmdrop(false)}
+                    value={farm}
+                    setValue={setFarm}
+                    dropDownStyle={tw `mt-2`}
+                />} 
                 <Text style={tw `text-lg font-semibold`}>Date Range</Text>
                 <TextInput 
                     mode='outlined'

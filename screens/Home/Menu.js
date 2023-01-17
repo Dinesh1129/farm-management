@@ -5,17 +5,20 @@ import {useNavigation} from '@react-navigation/native'
 import { getDrivers, useDriver } from '../../components/contexts/driver/driverState'
 import { getTractors, useTractor } from '../../components/contexts/Tractors/tractorState'
 import { getPlows, usePlow } from '../../components/contexts/plows/plowState'
+import { getFarms,useFarm } from '../../components/contexts/Farms/farmState'
 
 const Menu = () => {
     const navigation = useNavigation()
     const [driverstate,driverDispatch] = useDriver()
     const [tractorstate,tractorDispatch] = useTractor()
     const [plowstate,plowDispatch] = usePlow()
+    const [farmstate,farmDispatch] = useFarm()
 
     useEffect(() => {
         getDrivers(driverDispatch)
         getTractors(tractorDispatch)
         getPlows(plowDispatch)
+        getFarms(farmDispatch)
     },[])
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
@@ -34,6 +37,9 @@ const Menu = () => {
                 </TouchableOpacity>
                 <TouchableOpacity style={tw `mt-2 h-[150px] w-[150px] bg-[#fcba03] justify-center items-center flex flex-row`} onPress={() => navigation.navigate('plows')}>
                     <Text style={tw `text-center text-black`}>Plows</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={tw `mt-2 h-[150px] w-[150px] bg-[#fcba03] justify-center items-center flex flex-row`} onPress={() => navigation.navigate('farms')}>
+                    <Text style={tw `text-center text-black`}>Farms</Text>
                 </TouchableOpacity>
             </View>
         </View>

@@ -11,6 +11,7 @@ import {useDriver} from '../../components/contexts/driver/driverState'
 import { useTractor } from '../../components/contexts/Tractors/tractorState'
 import { usePlow } from '../../components/contexts/plows/plowState'
 import { addRecord, clearCurrentRecord, deleteRecord, updateRecord, useRecord } from '../../components/contexts/Records/recordState'
+import {useFarm} from '../../components/contexts/Farms/farmState'
 
 
 
@@ -26,18 +27,21 @@ const AddEditRecord = ({route}) => {
     const [tractorstate,tractorDispatch] = useTractor()
     const [plowstate,plowDispatch] = usePlow()
     const [recordstate,recordDispatch] = useRecord()
+    const [farmstate,farmDispatch] = useFarm()
 
     const navigation = useNavigation()
     
     const [driverlist,setDriverlist] = useState([])
     const [tractorlist,setTractorlist] = useState([])
     const [plowlist,setPlowlist] = useState([])
+    const [farmlist,setFarmlist] = useState([])
 
     const type = route.params?.type
 
     const [driverdrop,setDriverdrop] = useState(false)
     const [tractordrop,setTractordrop] = useState(false)
     const [plowdrop,setPlowdrop] = useState(false)
+    const [farmdrop,setFarmdrop] = useState(false)
     const [hrdrop,setHrdrop] = useState(false)
     const [mindrop,setMindrop] = useState(false)
 
@@ -46,12 +50,14 @@ const AddEditRecord = ({route}) => {
     const [plow,setPlow] = useState('')
     const [farmer,setFarmer] = useState('')
     const [place,setPlace] = useState('')
+    const [farmername,setFarmername] = useState('')
     
 
     const [date,setDate] = useState(null)
     const [totalhr,setTotalhr] = useState(0)
     const [totalmins,setTotalmins] = useState(0)
     const [hourRate,setHourrate] = useState(0)
+    const [amountCollected,setAmountCollected] = useState(0)
     
 
     const [id,setId] = useState(uuid.v4())
@@ -64,12 +70,15 @@ const AddEditRecord = ({route}) => {
         const drivers = driverstate.drivers.map(val => ({value:val.name,label:val.name}))
         const tractors = tractorstate.tractors.map(val => ({value:val.name,label:val.name}))
         const plows = plowstate.plows.map(val => ({value:val.name,label:val.name}))
+        const farms = farmstate.farms.map(farm => ({value:farm.farmername,label:farm.farmername}))
         
         setDriverlist(() => drivers)
 
         setTractorlist(() => tractors)
 
         setPlowlist(() => plows)
+
+        setFarmlist(() => farms)
 
         if(type=='edit'){
             const current = recordstate.current
@@ -84,6 +93,8 @@ const AddEditRecord = ({route}) => {
             setTotalmins(parseInt(current.totalmin))
             setHourrate(current.hourlyrate)
             setFarmer(current.farmer)
+            setFarmername(current.farmer)
+            setAmountCollected(current.amountCollected)
         }
     },[])
 
@@ -98,7 +109,7 @@ const AddEditRecord = ({route}) => {
        }
 
     const onSubmit = async() => {
-        if(farmer.trim() === "" || driver.trim()==="" || tractor.trim()==="" || date===null || (totalhr==0 && totalmins==0) || hourRate==0){
+        if(amountBalance=="Invalid" || farmername.trim() === "" || driver.trim()==="" || tractor.trim()==="" || date===null || (totalhr==0 && totalmins==0) || hourRate==0){
             ToastAndroid.show("Please fill required fields",ToastAndroid.SHORT)
             return
         }
@@ -114,7 +125,9 @@ const AddEditRecord = ({route}) => {
             totalmin:totalmins,
             hourlyrate:hourRate,
             totalamount,
-            farmer
+            amountCollected,
+            amountBalance,
+            farmer:farmername
         }
         setloading(true)
        let res
@@ -178,18 +191,27 @@ const AddEditRecord = ({route}) => {
     return ((totalhr*hourRate)+((totalmins/60)*hourRate)).toFixed(0)
    },[totalhr,totalmins,hourRate])
 
+   const amountBalance = useMemo(() => {
+    if(parseInt(amountCollected)>parseFloat(totalamount)){
+        ToastAndroid.show("Balance Should be a Whole Number",ToastAndroid.SHORT)
+        return "Invalid"
+    }
+    // return 500
+    return (parseInt(totalamount)-amountCollected).toFixed(0)
+   },[totalamount,amountCollected])
+
   return (
     <SafeAreaView style={tw `h-screen w-screen flex flex-col`}>
         <ScrollView style={tw `min-h-screen w-full`}>
             <View style={tw `mt-2 w-full px-4 min-h-screen flex flex-col space-y-2`}>
-            <TextInput  
+            {/* <TextInput  
                     label={'Farmer*'}
                     mode={'outlined'}
                     placeholder={'Farmer'}
                     keyboardType={'default'}
                     value={farmer}
                     onChangeText={setFarmer}
-                />
+                /> */}
                 <TextInput  
                     label={'Place'}
                     mode={'outlined'}
@@ -198,6 +220,17 @@ const AddEditRecord = ({route}) => {
                     value={place}
                     onChangeText={setPlace}
                 />
+                {farmlist.length > 0 &&  <DropDown 
+                    label='Farmer*'
+                    list={farmlist}
+                    mode={'outlined'}
+                    visible={farmdrop}
+                    showDropDown={() => setFarmdrop(true)}
+                    onDismiss={() => setFarmdrop(false)}
+                    value={farmername}
+                    setValue={setFarmername}
+                    dropDownStyle={tw `mt-2`}
+                />}
                {driverlist.length > 0 &&  <DropDown 
                     label='Driver*'
                     list={driverlist}
@@ -276,9 +309,26 @@ const AddEditRecord = ({route}) => {
 
             <TextInput 
                 mode='outlined'
+                label={'Total Amount'}
                 placeholder={'Total Amount'}
                 keyboardType={'number-pad'}
                 value={`Rs.${totalamount.toString()}`}
+                disabled={true}
+            />
+            <TextInput 
+                mode='outlined'
+                label={'Amount Collected'}
+                placeholder={'Hourly Rate'}
+                keyboardType={'number-pad'}
+                value={amountCollected ? amountCollected.toString() : ''}
+                onChangeText={setAmountCollected}
+            />
+            <TextInput 
+                mode='outlined'
+                label={'Amount Balance'}
+                placeholder={'Hourly Rate'}
+                keyboardType={'number-pad'}
+                value={`Rs.${amountBalance.toString()}`}
                 disabled={true}
             />
         

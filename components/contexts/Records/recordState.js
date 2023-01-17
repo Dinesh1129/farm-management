@@ -2,7 +2,8 @@ import React,{useContext, useReducer} from 'react'
 import recordReducer from './recordReducer'
 import RecordContext from './recordContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { ADD_RECORD, ALL_RECORD, APPEND_ALL_RECORD, APPEND_FILTER_RECORD, CLEAR_CURRENT_RECORD, CLEAR_FILTERED_RECORD, CURRENT_RECORD, DELETE_RECORD, FILTER_RECORD, GET_RECORD, RECORD_KEY, UPDATE_RECORD } from '../types'
+import { ADD_RECORD, ALL_RECORD, APPEND_ALL_RECORD, APPEND_FILTER_RECORD, APPEND_SEARCH_RECORD, CLEAR_CURRENT_RECORD, CLEAR_FILTERED_RECORD, CLEAR_SEARCH_RECORD, CURRENT_RECORD, DELETE_RECORD, FILTER_RECORD, GET_RECORD, RECORD_KEY, SEARCH_RECORD, UPDATE_RECORD,SERVER } from '../types'
+
 
 export const useRecord = () => {
     const {state,dispatch} = useContext(RecordContext)
@@ -12,7 +13,7 @@ export const useRecord = () => {
 export const getRecords = async(dispatch,start=0) => {
     try {
         const userid = await AsyncStorage.getItem("userid")
-        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/records/user/${userid}?start=${start}`)
+        const res = await fetch(`${SERVER}/records/user/${userid}?start=${start}`)
         if(res.status!=200){
             throw await res.json()
         }
@@ -41,7 +42,7 @@ export const getRecords = async(dispatch,start=0) => {
 
 export const getRecord = async(id,dispatch) => {
     try {
-        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/records/${id}`)
+        const res = await fetch(`${SERVER}/records/${id}`)
        if(res.status!=200){
         throw await res.json()
        }
@@ -59,7 +60,7 @@ export const getRecord = async(id,dispatch) => {
 export const addRecord = async (record,dispatch) => {
     try {
         const userid = await AsyncStorage.getItem("userid")
-        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/records/add`,{
+        const res = await fetch(`${SERVER}/records/add`,{
             method:"POST",
             headers:{
                 'Content-Type':"application/json"
@@ -87,7 +88,7 @@ export const addRecord = async (record,dispatch) => {
 export const updateRecord = async (id,record,dispatch)=>{
     try {
         const userid = await AsyncStorage.getItem("userid")
-        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/records/${id}`,{
+        const res = await fetch(`${SERVER}/records/${id}`,{
             method: "PUT",
             headers:{
                 'Content-Type': "application/json"
@@ -113,7 +114,7 @@ export const updateRecord = async (id,record,dispatch)=>{
 
 export const deleteRecord = async (id,dispatch) => {
     try {
-        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/records/${id}`,{
+        const res = await fetch(`${SERVER}/records/${id}`,{
             method: "DELETE"
         })
         if(res.status!=200){
@@ -130,10 +131,17 @@ export const deleteRecord = async (id,dispatch) => {
     }
 }
 
-export const filterRecord = async (driver,fromdate,todate,start,dispatch) => {
+export const filterRecord = async (farm,driver,fromdate,todate,start,dispatch) => {
     try {
         const userid = await AsyncStorage.getItem("userid")
-        const res = await fetch(`https://tractrack.netlify.app/.netlify/functions/api/records/user/${userid}/filter?start=${start}`,{
+        console.log({
+            userid,
+                driver,
+                fromdate, 
+                farm,
+                todate
+        });
+        const res = await fetch(`${SERVER}/records/user/${userid}/filter?start=${start}`,{
             method:"POST",
             headers:{
                 'Content-Type':"application/json"
@@ -141,7 +149,8 @@ export const filterRecord = async (driver,fromdate,todate,start,dispatch) => {
             body:JSON.stringify({
                 userid,
                 driver,
-                fromdate,
+                fromdate, 
+                farm,
                 todate
             })
         })
@@ -171,6 +180,33 @@ export const filterRecord = async (driver,fromdate,todate,start,dispatch) => {
     }
 }
 
+export const searchRecord = async (keyword,start=0,dispatch) => {
+    try {
+        const userid= await AsyncStorage.getItem("userid")
+        const res = await fetch(`${SERVER}/records/user/${userid}/search?keyword=${keyword}&start=${start}`)
+        if(res.status!=200){
+            console.log('res status ==================== ==== ',res.status);
+            return await res.json()
+        }
+        const data = await res.json()
+        if(start==0){
+            dispatch({
+                type: SEARCH_RECORD,
+                payload: data
+            })
+        }else{
+            dispatch({
+                type: APPEND_SEARCH_RECORD,
+                payload:data
+            })
+        }
+        // console.log("search data is============== ",data)
+        return {status:"success",msg:"Searched Successfully"}
+    } catch (error) {
+        return {status:"fail",msg:error?.msg}
+    }
+}
+
 export const setCurrentRecord = (record,dispatch) => {
     
     dispatch({
@@ -192,11 +228,18 @@ export const clearFilteredRecord = (dispatch) => {
     })
 }
 
+export const clearSearchRecord = (dispatch) => {
+    dispatch({
+        type: CLEAR_SEARCH_RECORD
+    })
+}
+
 const RecordState = ({children}) => {
   const initialState = {
     records:[],
     current:null,
     filtered:[],
+    searched:[],
     error:null
   }
   const [state,dispatch] = useReducer(recordReducer,initialState)
