@@ -232,19 +232,19 @@ const SearchRecordMenu = ({route}) => {
               {state.filtered.length>0 && <TouchableOpacity style={tw`h-max w-max p-2 bg-[#5203fc] text-sm font-normal text-capitalize`} onPress={() => { onClearFilter() }}><Text style={tw`text-[#f7f7f7] text-center`}>Clear Filter</Text></TouchableOpacity>}
               {state.filtered.length > 0 && <View style={tw `my-2 p-1 border-1 flex flex-col items-center`}>
                 <View style={tw`flex flex-row items-center`}>
-                    <Text>Total Hours farmer worked: </Text>
+                    <Text>Total hours driven: </Text>
                     <Text style={tw `text-lg font-bold`}>{worktime}</Text>
                 </View>
                 <View style={tw`flex flex-row items-center`}>
-                    <Text>Total amount of money earned: </Text>
+                    <Text>Total amount earned: </Text>
                     <Text style={tw `text-lg font-bold`}><FA name='rupee' size={20}/> {amount}</Text>
                 </View>
                 <View style={tw`flex flex-row items-center`}>
-                    <Text>Total amount of money collected: </Text>
+                    <Text>Total amount collected: </Text>
                     <Text style={tw `text-lg font-bold`}><FA name='rupee' size={20}/> {amountCollected}</Text>
                 </View>
                 <View style={tw`flex flex-row items-center`}>
-                    <Text>Total amount of money Balance: </Text>
+                    <Text>Balance amount: </Text>
                     <Text style={tw `text-lg font-bold`}><FA name='rupee' size={20}/> {amountBalance}</Text>
                 </View>
               </View>}
