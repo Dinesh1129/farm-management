@@ -22,7 +22,9 @@ const AddEditPlow = ({route}) => {
     if(type=="edit"){
                 setId(current._id)
                 setName(current.name)
-                setType(current.type)
+                if(current.type){
+                    setType(current.type)
+                }
            }
            else{
             setId(uuid.v4())

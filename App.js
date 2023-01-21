@@ -126,6 +126,10 @@ const App = () => {
                     header:({route}) => <HeaderSimple name={"Add your Record"}/>,
                     headerShown:true
                   }}/>
+                  <Stack.Screen name='record-edit' component={AddEditRecord} options={{
+                    header:({route}) => <HeaderSimple name={"Edit your Record"}/>,
+                    headerShown:true
+                  }}/>
                   <Stack.Screen name='search-record' component={SearchRecordMenu} options={{
                     header:({route}) => <HeaderSimple name={"Search Record"}/>,
                     headerShown:true
