@@ -154,7 +154,7 @@ const AddEditRecord = ({route}) => {
         let res
         Alert.alert(
             "Delete Confirmation",
-            "Are You sure,this record will permanently deleted ?",
+            "This will permanently delete the record. Do you want to proceed?",
             [
                 {
                     text:"Cancel",

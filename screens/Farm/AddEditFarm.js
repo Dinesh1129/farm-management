@@ -59,7 +59,7 @@ const AddEditFarm = ({route}) => {
         let res
         Alert.alert(
             "Delete Confirmation",
-            `Are You sure,${Name} will permanently deleted ?`,
+            `This will permanently remove ${Name}. Do you want to proceed?`,
             [
                 {
                     text:"Cancel",
