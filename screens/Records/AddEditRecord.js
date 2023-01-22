@@ -58,7 +58,6 @@ const AddEditRecord = ({route}) => {
     const [totalmins,setTotalmins] = useState(0)
     const [hourRate,setHourrate] = useState(0)
     const [amountCollected,setAmountCollected] = useState(0)
-    
 
     const [id,setId] = useState(uuid.v4())
 
@@ -67,10 +66,10 @@ const AddEditRecord = ({route}) => {
     const [loading,setloading] = useState(false)
 
     useEffect(() => {
-        const drivers = driverstate.drivers.map(val => ({value:val.name,label:val.name}))
-        const tractors = tractorstate.tractors.map(val => ({value:val.name,label:val.name}))
-        const plows = plowstate.plows.map(val => ({value:val.name,label:val.name}))
-        const farms = farmstate.farms.map(farm => ({value:farm.farmername,label:farm.farmername}))
+        const drivers = driverstate.drivers.map(val => ({value:val._id,label:val.name}))
+        const tractors = tractorstate.tractors.map(val => ({value:val._id,label:val.name}))
+        const plows = plowstate.plows.map(val => ({value:val._id,label:val.name}))
+        const farms = farmstate.farms.map(farm => ({value:farm._id,label:farm.farmername}))
         
         setDriverlist(() => drivers)
 
@@ -82,19 +81,38 @@ const AddEditRecord = ({route}) => {
 
         if(type=='edit'){
             const current = recordstate.current
-            
+            let cdriver = driverstate.drivers.find((driver) => driver._id==current.driver)
+            let ctractor = tractorstate.tractors.find((tractor) => tractor._id==current.tractor)
+            let cplow = plowstate.plows.find((plow) => plow._id==current.plow)
+            let cfarm = farmstate.farms.find((farm) => farm._id==current.farmer)
+
+            if(cdriver==undefined){
+                cdriver={_id:""}
+            }
+            if(ctractor==undefined){
+                ctractor={_id:""}
+            }
+            if(cplow==undefined){
+                cplow={_id:""}
+            }
+            if(cfarm==undefined){
+                cfarm={_id:""}
+            }
+
             setId(current._id)
             setPlace(current.place)
-            setDriver(current.driver)
-            setTractor(current.tractor)
-            setPlow(current.plow)
+            setDriver(cdriver._id)
+            setTractor(ctractor._id)
+            setPlow(cplow._id)
             setDate(new Date(current.date))
             setTotalhr(parseInt(current.totalhr))
             setTotalmins(parseInt(current.totalmin))
             setHourrate(current.hourlyrate)
-            setFarmer(current.farmer)
-            setFarmername(current.farmer)
+            setFarmer(cfarm._id)
+            setFarmername(cfarm._id)
             setAmountCollected(current.amountCollected)
+            
+            
         }
     },[])
 
@@ -132,6 +150,7 @@ const AddEditRecord = ({route}) => {
         setloading(true)
        let res
     //    console.log(data)
+    
         if(type=="edit"){
             
            res = await updateRecord(data.id,data,recordDispatch)

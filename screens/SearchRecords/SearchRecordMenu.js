@@ -6,13 +6,17 @@ import { filterRecord, getRecords, useRecord,getRecord, clearFilteredRecord, sea
 import {useNavigation} from '@react-navigation/native'
 import MI from 'react-native-vector-icons/dist/MaterialIcons'
 import FA from 'react-native-vector-icons/dist/FontAwesome'
+import { useFarm } from '../../components/contexts/Farms/farmState'
+import { useDriver } from '../../components/contexts/driver/driverState'
 
 const RecordRender = ({record}) => {
   const navigation = useNavigation()
   const [state,dispatch] = useRecord()
+  const [farmstate,farmispatch] = useFarm()
+  const [driverstate,driverDispatch] = useDriver()
   const addType = async () => {
     await getRecord(record._id,dispatch)
-    navigation.navigate('record-add',{type:"edit"})
+    navigation.navigate('record-edit',{type:"edit"})
   }
   const workTime = useMemo((hrs=record.totalhr,mins=record.totalmin) => {
     if(hrs==0){
@@ -23,6 +27,24 @@ const RecordRender = ({record}) => {
     }
     return `${hrs} hr : ${mins} mins`
    },[JSON.stringify(record)])
+
+   const getDriver = useMemo((driverid=record.driver) => {
+    const driver = driverstate.drivers.find((driver) => driver._id==driverid)
+    console.log('driver is',driver);
+    if(driver==undefined){
+      return "Value Not Found"
+    }
+    return driver.name
+   },[JSON.stringify(record)])
+
+   const getFarmer = useMemo((farmerid=record.farmer) => {
+    const farmer = farmstate.farms.find((farm) => farm._id==farmerid)
+    console.log('farmer is',farmer);
+    if(farmer==undefined){
+      return "Value Not Found"
+    }
+    return farmer.farmername
+   },[JSON.stringify(record)])
   
   return (
     <TouchableOpacity style={tw `mt-1 w-full h-max py-2 px-1 flex flex-row justify-between border`} onPress={() => addType()}>
@@ -30,11 +52,11 @@ const RecordRender = ({record}) => {
           <Text style={tw `font-semibold text-md`}>{record.date? `${new Date(record.date).toDateString()}` : ''}</Text>
           <Text style={tw `font-semibold text-md`}>Hours Worked : {workTime}</Text>
           <Text style={tw `font-semibold text-md`}>Place : {record.place? record.place : ''}</Text>
-          <Text style={tw `font-semibold text-md`}>Farmer : {record.farmer? record.farmer : ''}</Text>
-          <Text style={tw `font-semibold text-md`}>Driver : {record.driver? record.driver : ''}</Text>
+          <Text style={tw `font-semibold text-md`}>Farmer : {getFarmer}</Text>
+          <Text style={tw `font-semibold text-md`}>Driver : {getDriver}</Text>
           <Text style={tw `font-semibold text-md`}>Total Amount : {record.totalamount? record.totalamount : ''}</Text>
           <Text style={tw `font-semibold text-md`}>Total Amount Collected : {record.amountCollected? record.amountCollected : ''}</Text>
-          <Text style={tw `font-semibold text-md`}>Balance Amount : {record.amountBalance? record.amountBalance : ''}</Text>
+          <Text style={tw `font-semibold text-md`}>Balance Amount : {record.amountBalance!=null? record.amountBalance : ''}</Text>
       </View>
     <MI name={'edit'} size={25} color={'black'}/>
 </TouchableOpacity>

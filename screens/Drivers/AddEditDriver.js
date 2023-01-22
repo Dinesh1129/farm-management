@@ -25,8 +25,12 @@ const AddEditDriver = ({route}) => {
     if(type=="edit"){
                 setId(current._id)
                 setName(current.name)
-                setEmail(current.email)
-                setphone(current.phone.toString())
+                if(current.email){
+                    setEmail(current.email)
+                }
+                if(current.phone){
+                    setphone(current.phone.toString())
+                }
                 setlicense(current.license)
            }
            else{

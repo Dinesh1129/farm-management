@@ -47,10 +47,10 @@ const FilterRecord = ({route}) => {
     const [todate,tosetDate] = useState(null)
 
     useEffect(() => {
-        const drivers = driverstate.drivers.map(val => ({value:val.name,label:val.name}))
-        const tractors = tractorstate.tractors.map(val => ({value:val.name,label:val.name}))
-        const plows = plowstate.plows.map(val => ({value:val.name,label:val.name}))
-        const farms = farmstate.farms.map(val => ({value:val.farmername,label:val.farmername}))
+        const drivers = driverstate.drivers.map(val => ({value:val._id,label:val.name}))
+        const tractors = tractorstate.tractors.map(val => ({value:val._id,label:val.name}))
+        const plows = plowstate.plows.map(val => ({value:val._id,label:val.name}))
+        const farms = farmstate.farms.map(val => ({value:val._id,label:val.farmername}))
         
         setDriverlist(() => drivers)
 
