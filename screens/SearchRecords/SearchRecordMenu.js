@@ -30,7 +30,7 @@ const RecordRender = ({record}) => {
 
    const getDriver = useMemo((driverid=record.driver) => {
     const driver = driverstate.drivers.find((driver) => driver._id==driverid)
-    console.log('driver is',driver);
+
     if(driver==undefined){
       return "Value Not Found"
     }
@@ -39,7 +39,7 @@ const RecordRender = ({record}) => {
 
    const getFarmer = useMemo((farmerid=record.farmer) => {
     const farmer = farmstate.farms.find((farm) => farm._id==farmerid)
-    console.log('farmer is',farmer);
+    
     if(farmer==undefined){
       return "Value Not Found"
     }
@@ -51,7 +51,7 @@ const RecordRender = ({record}) => {
       <View style={tw `flex flex-col h-full w-11/12`}>
           <Text style={tw `font-semibold text-md`}>{record.date? `${new Date(record.date).toDateString()}` : ''}</Text>
           <Text style={tw `font-semibold text-md`}>Hours Worked : {workTime}</Text>
-          <Text style={tw `font-semibold text-md`}>Place : {record.place? record.place : ''}</Text>
+          {/* <Text style={tw `font-semibold text-md`}>Place : {record.place? record.place : ''}</Text> */}
           <Text style={tw `font-semibold text-md`}>Farmer : {getFarmer}</Text>
           <Text style={tw `font-semibold text-md`}>Driver : {getDriver}</Text>
           <Text style={tw `font-semibold text-md`}>Total Amount : {record.totalamount? record.totalamount : ''}</Text>

@@ -49,7 +49,6 @@ const AddEditDriver = ({route}) => {
         phone,
         license
     }
-    console.log(driver)
     setloading(true)
     let res
     if(type=="edit"){

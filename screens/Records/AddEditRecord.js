@@ -149,7 +149,7 @@ const AddEditRecord = ({route}) => {
         }
         setloading(true)
        let res
-    //    console.log(data)
+    
     
         if(type=="edit"){
             
@@ -231,14 +231,14 @@ const AddEditRecord = ({route}) => {
                     value={farmer}
                     onChangeText={setFarmer}
                 /> */}
-                <TextInput  
+                {/* <TextInput  
                     label={'Place'}
                     mode={'outlined'}
                     placeholder={'Place'}
                     keyboardType={'default'}
                     value={place}
                     onChangeText={setPlace}
-                />
+                /> */}
                 {farmlist.length > 0 &&  <DropDown 
                     label='Farmer*'
                     list={farmlist}

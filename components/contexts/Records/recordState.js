@@ -18,7 +18,6 @@ export const getRecords = async(dispatch,start=0) => {
             throw await res.json()
         }
         const data = await res.json()
-        console.log('record data is',data)
         if(data.length==0){
             return {status:"empty",msg:"No data"}
         }
@@ -134,13 +133,6 @@ export const deleteRecord = async (id,dispatch) => {
 export const filterRecord = async (farm,driver,fromdate,todate,start,dispatch) => {
     try {
         const userid = await AsyncStorage.getItem("userid")
-        console.log({
-            userid,
-                driver,
-                fromdate, 
-                farm,
-                todate
-        });
         const res = await fetch(`${SERVER}/records/user/${userid}/filter?start=${start}`,{
             method:"POST",
             headers:{
@@ -185,7 +177,6 @@ export const searchRecord = async (keyword,start=0,dispatch) => {
         const userid= await AsyncStorage.getItem("userid")
         const res = await fetch(`${SERVER}/records/user/${userid}/search?keyword=${keyword}&start=${start}`)
         if(res.status!=200){
-            console.log('res status ==================== ==== ',res.status);
             return await res.json()
         }
         const data = await res.json()
@@ -200,7 +191,7 @@ export const searchRecord = async (keyword,start=0,dispatch) => {
                 payload:data
             })
         }
-        // console.log("search data is============== ",data)
+        
         return {status:"success",msg:"Searched Successfully"}
     } catch (error) {
         return {status:"fail",msg:error?.msg}

@@ -13,7 +13,6 @@ export const useDriver = () => {
 export const getDrivers = async(dispatch) => {
     try {
         const userid = await AsyncStorage.getItem("userid")
-        console.log("user id is : ",userid)
         const res = await fetch(`${SERVER}/drivers/user/${userid}`)
         if(res.status!=200){
             return false;
