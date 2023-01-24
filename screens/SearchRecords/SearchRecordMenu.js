@@ -55,7 +55,7 @@ const RecordRender = ({record}) => {
           <Text style={tw `font-semibold text-md`}>Farmer : {getFarmer}</Text>
           <Text style={tw `font-semibold text-md`}>Driver : {getDriver}</Text>
           <Text style={tw `font-semibold text-md`}>Total Amount : {record.totalamount? record.totalamount : ''}</Text>
-          <Text style={tw `font-semibold text-md`}>Total Amount Collected : {record.amountCollected? record.amountCollected : ''}</Text>
+          <Text style={tw `font-semibold text-md`}>Total Amount Collected : {record.amountCollected!=null? record.amountCollected : ''}</Text>
           <Text style={tw `font-semibold text-md`}>Balance Amount : {record.amountBalance!=null? record.amountBalance : ''}</Text>
       </View>
     <MI name={'edit'} size={25} color={'black'}/>
@@ -158,7 +158,7 @@ const SearchRecordMenu = ({route}) => {
        let res= await getRecords(dispatch,start+5)
         if(res.status=="empty")
         {
-            setStart(1)
+            setStart(0)
             setShow(false)
             ToastAndroid.show(res.msg,ToastAndroid.SHORT)
         }else if(res.status=="fail"){
